@@ -7,11 +7,18 @@ function CreatorInputs (props) {
   const [inputs, setInputs] = useState([])
 
   function customFn (e) {
-    if(e.target.className === 'input_circle') {
-      console.log(e)
+    if (e.target.classList.contains('input_circle')) {
       const dotIndex = e.target.attributes.dot_id.value;
-      
-
+      if (e.ctrlKey) {
+        const newInputs = [...inputs]
+        // eslint-disable-next-line no-unused-vars
+        const removeIndexItem = newInputs.splice(dotIndex, 1);
+        setInputs(newInputs);
+      } else {
+        const newInputs = [...inputs];
+        newInputs[dotIndex].activated = !newInputs[dotIndex].activated
+        setInputs(newInputs);
+      }
     } else {
       //Position of mouse - parentDiv offsetTop - circle.height/2
       const relativeTop = e.clientY - e.target.offsetTop - 10;
