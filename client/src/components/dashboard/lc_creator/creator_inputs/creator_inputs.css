@@ -1,0 +1,14 @@
+.creator_inputs {
+  position: relative;
+}
+.input_circle{
+  position: absolute;
+  width: 20px;
+  height: 20px;
+  border-radius: 100%;
+  background-color: #fff;
+}
+
+.circle_activated{
+  background-color: #ec2239;
+}

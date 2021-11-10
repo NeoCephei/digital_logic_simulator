@@ -1,0 +1,11 @@
+.creator_board{
+  width: 100%;
+  height: 100%;
+  /* background-color: #3B3B3B; */
+  background-color: transparent;
+}
+
+.creator_board > h1 {
+  color: #757575;
+  margin: auto;
+}

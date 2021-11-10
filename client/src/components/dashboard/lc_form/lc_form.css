@@ -27,7 +27,8 @@
   height: 100%;
   width: 150px;
   background-color: transparent;
-  box-shadow: 0px 0px 20px 1px #186A14;
+  /* box-shadow: 0px 0px 20px 1px #186A14; */
+  box-shadow: 0px 0px 20px 1px #fff;
   color:#ffffff;
   font-size: xx-large;
 }

@@ -6,12 +6,18 @@ import React from 'react'
 /*
 LC board/creator ---> This one have 3 sections (input, board, output)
 */
+import CreatorInputs from './creator_inputs/creator_inputs'
+import CreatorBoard from './creator_board/creator_board'
+import CreatorOutputs from './creator_outputs/creator_outputs'
+
 
 function LcCreator (props) {
 
   return (
     <div className="lc_creator">
-      <h1>Hello from CREATOR</h1>
+      <CreatorInputs />
+      <CreatorBoard />
+      <CreatorOutputs />
     </div>
   )
 }
