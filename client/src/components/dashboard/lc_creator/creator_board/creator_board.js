@@ -1,8 +1,11 @@
 import './creator_board.css'
-import React from 'react'
+import React, {useContext}from 'react'
 
+import globalContext from '../../../../services/globalContext'
 
 function CreatorBoard (props) {
+
+  const {magicProps} = useContext(globalContext)
 
   return (
     <div id="creator_board" className="creator_board">

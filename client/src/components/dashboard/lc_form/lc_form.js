@@ -1,35 +1,24 @@
 import './lc_form.css';
-import React, {useState} from 'react'
+import React, {useContext} from 'react'
 
 //Import components here: (LC means LogicComponent)
 
 /*
 LC form ---> This one have a form with text input and create submit
 */
-
+import globalContext from '../../../services/globalContext'
 
 function LcForm (props) {
-  
-  const [componentName, setComponentName] = useState('');
+
+  const {magicProps} = useContext(globalContext);
+  const {componentName, handleTextInput, handleSubmitInput} = magicProps
   
   function handleNameChange (e) {
-    setComponentName(e.target.value)
+    handleTextInput(e)
   }
   
   function handleSubmit (e) {
-    e.preventDefault();
-    if (componentName.length < 1) {
-      alert('Please write a name');
-    } else {
-      // const inputs = document.getElementsById('creator_inputs');
-      // const outputs = document.getElementsById('creator_outsputs');
-      // const board = document.getElementById('creator_board');
-      // console.log(inputs)
-      // console.log(outputs)
-      // console.log(board)
-      // console.log('From LC_Form: This is the name', componentName);
-      setComponentName('')
-    }
+    handleSubmitInput(e)
   }
 
   return (

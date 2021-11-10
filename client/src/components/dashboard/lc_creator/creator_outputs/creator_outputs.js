@@ -1,24 +1,15 @@
 import './creator_outputs.css'
-import React, {useState} from 'react'
+import React, {useContext} from 'react'
 
+import globalContext from '../../../../services/globalContext'
 
 function CreatorOutputs (props) {
 
-  const [outputs, setOutputs] = useState([])
+  const {magicProps} = useContext(globalContext)
+  const {outputs, customOutputFn} = magicProps
 
   function customFn (e) {
-    if (e.target.classList.contains('output_circle')) {
-      const dotIndex = e.target.attributes.dot_id.value;
-      const newOutputs = [...outputs]
-      // eslint-disable-next-line no-unused-vars
-      const removeIndexItem = newOutputs.splice(dotIndex, 1);
-      setOutputs(newOutputs);
-    } else {
-      //Position of mouse - parentDiv offsetTop - circle.height/2
-      const relativeTop = e.clientY - e.target.offsetTop - 10;
-      const newDot = {top: relativeTop, right: '-10px', activated: false}
-      setOutputs([...outputs, newDot]);
-    }
+    customOutputFn(e)
   }
 
   return (
