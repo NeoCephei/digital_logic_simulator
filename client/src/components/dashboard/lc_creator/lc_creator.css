@@ -4,6 +4,7 @@
 
 
   border: 1px solid #fff;
-  width: calc(100%-2px);
+  width: 98vw;
   height: 100%;
+  margin: 0 auto;
 }
