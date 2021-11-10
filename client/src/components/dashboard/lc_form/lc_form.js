@@ -21,7 +21,13 @@ function LcForm (props) {
     if (componentName.length < 1) {
       alert('Please write a name');
     } else {
-      console.log('From LC_Form: This is the name', componentName);
+      // const inputs = document.getElementsById('creator_inputs');
+      // const outputs = document.getElementsById('creator_outsputs');
+      // const board = document.getElementById('creator_board');
+      // console.log(inputs)
+      // console.log(outputs)
+      // console.log(board)
+      // console.log('From LC_Form: This is the name', componentName);
       setComponentName('')
     }
   }

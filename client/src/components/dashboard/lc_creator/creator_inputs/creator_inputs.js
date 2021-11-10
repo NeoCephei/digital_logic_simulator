@@ -28,7 +28,7 @@ function CreatorInputs (props) {
   }
 
   return (
-    <div className="creator_inputs creator_redzone" onClick={customFn}>
+    <div id="creator_inputs" className="creator_inputs creator_redzone" onClick={customFn}>
       {inputs.map((dot,index) => {
         return (
           <div 

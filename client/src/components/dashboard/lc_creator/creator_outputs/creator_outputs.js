@@ -22,7 +22,7 @@ function CreatorOutputs (props) {
   }
 
   return (
-    <div className="creator_outputs creator_redzone" onClick={customFn}>
+    <div id="creator_outputs" className="creator_outputs creator_redzone" onClick={customFn}>
       {outputs.map((dot,index) => {
         return (
           <div 
