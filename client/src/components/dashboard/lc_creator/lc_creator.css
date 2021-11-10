@@ -1,0 +1,9 @@
+.lc_creator{
+  display: flex;
+  flex-direction: row;
+
+
+  border: 1px solid #fff;
+  width: calc(100%-2px);
+  height: 100%;
+}
