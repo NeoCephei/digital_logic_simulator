@@ -1,0 +1,18 @@
+.navbar{
+  height: 72px;
+  width: 100%;
+  box-shadow: 0px 5px 10px -10px #025700;
+  line-height: 72px;
+
+  display:flex;
+  flex-direction: row;
+  justify-content: center;
+  align-content: center;
+}
+.navbar > h1 {
+  font-size: 30px;
+  color: #186A14;
+}
+.navbar > h1:hover {
+  cursor: default;
+}
