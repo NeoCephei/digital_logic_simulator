@@ -18,6 +18,7 @@ function CreatorInputs (props) {
         return (
           <div 
             key = {index}
+            key_num = {dot.cNode}
             dot_id = {index}
             className = {!dot.activated ? 'input_circle' : 'input_circle circle_activated'} 
             style = {{

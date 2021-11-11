@@ -19,7 +19,27 @@ function App() {
   */
 
   //Graph const
-  const graph = new Graph();
+  const graph = new Graph({multi: true, allowSelfLoops: false, type:'directed'});
+  const defaultGraph = {
+    attributes: {
+      name: 'My Graph',
+      n_input_Nodes: 0,
+      n_output_Nodes: 0,
+      n_Edges: 0
+    },
+    nodes: [
+      // {key: 'n0'},
+      // {key: 'n1'}
+    ],
+    edges: [
+      // {
+      //   key: 'n0->n1',
+      //   source: 'n0',
+      //   target: 'n1',
+      //   attributes: {type: 'KNOWS'}
+      // }
+    ]
+  }
   //Refs
   const dragItem = useRef(null)
   const dropZone = useRef(null)
@@ -45,33 +65,42 @@ function App() {
       bgColor: '#F94144'
     }
   ])
+  const [realGraph , setRealGraph] = useState(defaultGraph)
 
   //Injected functions
   function customInputFn (e) { //Needs improvement
     if (e.target.classList.contains('input_circle')) {
-      const dotIndex = e.target.attributes.dot_id.value;
+      const dotIndex = e.target.attributes.key_num.value*1;
       if (e.ctrlKey) {
-        const newInputs = [...inputs]
-        // eslint-disable-next-line no-unused-vars
-        const removeIndexItem = newInputs.splice(dotIndex, 1);
-        setInputs(newInputs);
+        const oldInputs = [...inputs];
+        const newInputs = oldInputs.filter(i => i.cNode !== dotIndex);
         // remove node from graph
-      } else {
-        const newInputs = [...inputs];
-        newInputs[dotIndex].activated = !newInputs[dotIndex].activated
+        const rG = {...realGraph}
+        const oldInputNodes = [...rG.nodes];
+        const newNodes = oldInputNodes.filter(node => node.key !== `input_n${dotIndex}`)
+        rG.nodes = [...newNodes];
+        setRealGraph(rG)
         setInputs(newInputs);
+      } else {
+        const oldInputs = [...inputs];
+        const targetInput = oldInputs.filter(i => i.cNode === dotIndex)[0];
+        targetInput.activated = !targetInput.activated
+        const newInputs = oldInputs.filter(i => i.cNode !== dotIndex);
+        setInputs([...newInputs, targetInput]);
       }
     } else {
+      //add node to graph
+      const rG = {...realGraph}
+      const keyNum = rG.attributes.n_input_Nodes
+      const newNode = {key: `input_n${keyNum}`};
+      rG.attributes.n_input_Nodes++;
+      rG.nodes.push(newNode);
       //Position of mouse - parentDiv offsetTop - circle.height/2
       const relativeTop = e.clientY - e.target.offsetTop - 10;
-      const newDot = {top: relativeTop, left: '-10px', activated: false}
+      const newDot = {cNode: keyNum, top: relativeTop, left: '-10px', activated: false}
+      setRealGraph(rG)
       setInputs([...inputs, newDot]);
-      //add node to graph
-      graph.addNode(`n${inputs.length}`);
-      graph.addNode(`n${inputs.length+1}`);
     }
-    //console graph
-    console.log(graph.nodes())
   }
   function customOutputFn (e) { //Needs improvement
     if (e.target.classList.contains('output_circle')) {
@@ -119,32 +148,35 @@ function App() {
   }
   function handleSubmitInput (e) { //Needs improvement
     e.preventDefault();
-    if (componentName.length < 1 || componentName === 'And' || componentName === 'Not') {
-      alert('Please write a valid name');
-      // I should also check that nInputs and nOutputs is bigger than 0 and is connected!
-    } else {
-      const palette = [
-        '#F3722C',
-        '#F8961E',
-        '#F9C74F',
-        '#90BE6D',
-        '#577590'
-      ]
 
-      const newComponent = {
-        name: componentName, 
-        nInputs: inputs.length,
-        nOutputs: outputs.length,
-        formula: 'customFormula', //The formula should be connected based on the path and the components used
-        bgColor: palette[Math.floor(Math.random()*palette.length)]
-      }
+    const g = graph.import(realGraph)
+    console.log(g.nodes(), inputs);
+    // if (componentName.length < 1 || componentName === 'And' || componentName === 'Not') {
+    //   alert('Please write a valid name');
+    //   // I should also check that nInputs and nOutputs is bigger than 0 and is connected!
+    // } else {
+    //   const palette = [
+    //     '#F3722C',
+    //     '#F8961E',
+    //     '#F9C74F',
+    //     '#90BE6D',
+    //     '#577590'
+    //   ]
 
-      setComponentList([...componentList, newComponent])
-      setComponentName('')
-      setInputs([])
-      setOutputs([])
-      setBoard([])
-    }
+    //   const newComponent = {
+    //     name: componentName, 
+    //     nInputs: inputs.length,
+    //     nOutputs: outputs.length,
+    //     formula: 'customFormula', //The formula should be connected based on the path and the components used
+    //     bgColor: palette[Math.floor(Math.random()*palette.length)]
+    //   }
+
+    //   setComponentList([...componentList, newComponent])
+    //   setComponentName('')
+    //   setInputs([])
+    //   setOutputs([])
+    //   setBoard([])
+    // }
   }
   function handleDragStart(e) {
     dragItem.current = e;
