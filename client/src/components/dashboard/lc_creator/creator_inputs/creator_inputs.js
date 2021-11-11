@@ -23,8 +23,8 @@ function CreatorInputs (props) {
             style = {{
               top: dot.top, 
               left: dot.left,
-              }}>
-            
+            }}>
+            <div className = {!dot.activated ? 'small_dot' : 'small_dot dot_activated'}/>
           </div>
         )
       })}

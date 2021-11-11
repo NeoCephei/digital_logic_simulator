@@ -23,8 +23,8 @@ function CreatorOutputs (props) {
             style = {{
               top: dot.top, 
               right: dot.right,
-              }}>
-            
+            }}>
+            <div className = 'small_output_dot'/>
           </div>
         )
       })}

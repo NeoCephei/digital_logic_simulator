@@ -1,5 +1,6 @@
 import './App.css';
 
+// import cytoscape from 'cytoscape';
 import Graph from 'graphology';
 
 import React, {useState, useRef} from 'react'
@@ -18,9 +19,7 @@ function App() {
   */
 
   //Graph const
-  // eslint-disable-next-line no-unused-vars
-  const graph = new Graph({multi: true, allowSelfLoops: false, type: 'directed'});
-
+  const graph = new Graph();
   //Refs
   const dragItem = useRef(null)
   const dropZone = useRef(null)
@@ -48,7 +47,7 @@ function App() {
   ])
 
   //Injected functions
-  function customInputFn (e) {
+  function customInputFn (e) { //Needs improvement
     if (e.target.classList.contains('input_circle')) {
       const dotIndex = e.target.attributes.dot_id.value;
       if (e.ctrlKey) {
@@ -56,6 +55,7 @@ function App() {
         // eslint-disable-next-line no-unused-vars
         const removeIndexItem = newInputs.splice(dotIndex, 1);
         setInputs(newInputs);
+        // remove node from graph
       } else {
         const newInputs = [...inputs];
         newInputs[dotIndex].activated = !newInputs[dotIndex].activated
@@ -66,9 +66,14 @@ function App() {
       const relativeTop = e.clientY - e.target.offsetTop - 10;
       const newDot = {top: relativeTop, left: '-10px', activated: false}
       setInputs([...inputs, newDot]);
+      //add node to graph
+      graph.addNode(`n${inputs.length}`);
+      graph.addNode(`n${inputs.length+1}`);
     }
+    //console graph
+    console.log(graph.nodes())
   }
-  function customOutputFn (e) {
+  function customOutputFn (e) { //Needs improvement
     if (e.target.classList.contains('output_circle')) {
       const dotIndex = e.target.attributes.dot_id.value;
       const newOutputs = [...outputs]

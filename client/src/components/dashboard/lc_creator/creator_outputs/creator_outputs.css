@@ -12,3 +12,18 @@
 .circle_activated{
   background-color: #ec2239;
 }
+
+.small_output_dot{
+  width: 10px;
+  height: 10px;
+  border-radius: 100%;
+  
+  position: absolute;
+  top: 5px;
+  left: -20px;
+
+  background-color:#fff;
+}
+.small_output_dot:hover{
+  cursor: pointer;
+}
