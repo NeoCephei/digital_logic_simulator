@@ -25,7 +25,7 @@ function CreatorInputs (props) {
               top: dot.top, 
               left: dot.left,
             }}>
-            <div className = {!dot.activated ? 'small_dot' : 'small_dot dot_activated'}/>
+            <div className = {!dot.activated ? 'small_dot' : 'small_dot dot_activated'} key_num = {dot.cNode}/>
           </div>
         )
       })}

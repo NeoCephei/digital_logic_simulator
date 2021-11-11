@@ -24,6 +24,7 @@
   left: 25px;
 
   background-color:#fff;
+  z-index: 9;
 }
 .small_dot:hover{
   cursor: pointer;

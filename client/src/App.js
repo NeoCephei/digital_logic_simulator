@@ -45,6 +45,7 @@ function App() {
   const dropZone = useRef(null)
 
   //States
+  const [realGraph , setRealGraph] = useState(defaultGraph)
   const [componentName, setComponentName] = useState('');
   const [inputs, setInputs] = useState([])
   const [outputs, setOutputs] = useState([])
@@ -65,7 +66,6 @@ function App() {
       bgColor: '#F94144'
     }
   ])
-  const [realGraph , setRealGraph] = useState(defaultGraph)
 
   //Injected functions
   function customInputFn (e) { //Needs improvement

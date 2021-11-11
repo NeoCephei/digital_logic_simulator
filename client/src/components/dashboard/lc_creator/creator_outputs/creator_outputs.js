@@ -25,7 +25,7 @@ function CreatorOutputs (props) {
               top: dot.top, 
               right: dot.right,
             }}>
-            <div className = 'small_output_dot'/>
+            <div className = 'small_output_dot' key_num = {dot.cNode}/>
           </div>
         )
       })}
