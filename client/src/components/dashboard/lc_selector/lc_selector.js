@@ -19,13 +19,6 @@ function LcSelector (props) {
   const {magicProps} = useContext(globalContext);
   const {componentList, customSelectorFn, handleDragStart} = magicProps;
 
-  function customFn (e) {
-    customSelectorFn(e);
-  }
-  function dragging (e) {
-    handleDragStart(e);
-  }
-
   return (
     <div className="lc_selector">
       {componentList.map((item,index) => {
@@ -33,8 +26,8 @@ function LcSelector (props) {
           <div 
             key = {index} 
             className = 'selector_item'
-            onClick={customFn}
-            onDrag={dragging}
+            onClick={(e)=>{customSelectorFn(e)}}
+            onDrag={(e)=>{handleDragStart(e)}}
             draggable
             noutputs = {item.nOutputs} ninputs = {item.nInputs} // attributes 
             formula = {item.formula} bgcolor = {item.bgColor} // attributes

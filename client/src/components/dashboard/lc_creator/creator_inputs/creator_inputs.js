@@ -8,12 +8,8 @@ function CreatorInputs (props) {
   const {magicProps} = useContext(globalContext)
   const {inputs, customInputFn} = magicProps
 
-  function customFn (e) {
-    customInputFn(e);
-  }
-
   return (
-    <div id="creator_inputs" className="creator_inputs creator_redzone" onClick={customFn}>
+    <div id="creator_inputs" className="creator_inputs creator_redzone" onClick={(e)=>{customInputFn(e)}}>
       {inputs.map((dot,index) => {
         return (
           <div 

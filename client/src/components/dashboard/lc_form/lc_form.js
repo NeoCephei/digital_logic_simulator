@@ -12,22 +12,14 @@ function LcForm (props) {
 
   const {magicProps} = useContext(globalContext);
   const {componentName, handleTextInput, handleSubmitInput} = magicProps
-  
-  function handleNameChange (e) {
-    handleTextInput(e)
-  }
-  
-  function handleSubmit (e) {
-    handleSubmitInput(e)
-  }
 
   return (
-    <form onSubmit={handleSubmit} className="lc_form">
+    <form onSubmit={(e)=>{handleSubmitInput(e)}} className="lc_form">
       <input 
         type="text"
         placeholder="Name your component"
         value={componentName}
-        onChange ={handleNameChange}
+        onChange ={(e)=>{handleTextInput(e)}}
         className="form_componentName"
       ></input>
       <button type="submit">Create</button>

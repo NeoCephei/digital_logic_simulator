@@ -28,7 +28,7 @@ function App() {
       n_Edges: 0
     },
     nodes: [
-      // {key: 'n0'},
+      // {key: 'n0'}, {key: 'input_n0 || output_n0'} for inputs and outputs
       // {key: 'n1'}
     ],
     edges: [
@@ -163,7 +163,7 @@ function App() {
     e.preventDefault();
 
     const g = graph.import(realGraph)
-    console.log(g.nodes(), inputs);
+    console.log(g.nodes());
     // if (componentName.length < 1 || componentName === 'And' || componentName === 'Not') {
     //   alert('Please write a valid name');
     //   // I should also check that nInputs and nOutputs is bigger than 0 and is connected!

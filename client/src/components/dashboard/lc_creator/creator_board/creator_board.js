@@ -8,18 +8,8 @@ function CreatorBoard (props) {
   const {magicProps} = useContext(globalContext);
   const {board, customBoardFn, handleDragEnter, handleDragEnd} = magicProps;
 
-  function entering (e) {
-    handleDragEnter(e);
-  }
-  function dropping (e) {
-    handleDragEnd(e);
-  }
-  function boardItemClick (e) {
-    customBoardFn(e);
-  }
-
   return (
-    <div id="creator_board" className="creator_board" onDragEnter={entering} onDragEnd={dropping}>
+    <div id="creator_board" className="creator_board" onDragEnter={(e)=>{handleDragEnter(e)}} onDragEnd={(e)=>{handleDragEnd(e)}}>
       {board.map((item,index) => {
         const itemHeight = `${Math.max(item.ninputs.value,item.noutputs.value)*30}px`;
         return (
@@ -27,7 +17,7 @@ function CreatorBoard (props) {
             key = {index}
             board_item_id = {index}
             className = 'board_item'
-            onClick={boardItemClick}
+            onClick={(e)=>{customBoardFn(e)}}
             style = {{
               top: item.relTop, 
               left: item.relLeft,

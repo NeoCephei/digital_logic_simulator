@@ -8,12 +8,8 @@ function CreatorOutputs (props) {
   const {magicProps} = useContext(globalContext)
   const {outputs, customOutputFn} = magicProps
 
-  function customFn (e) {
-    customOutputFn(e)
-  }
-
   return (
-    <div id="creator_outputs" className="creator_outputs creator_redzone" onClick={customFn}>
+    <div id="creator_outputs" className="creator_outputs creator_redzone" onClick={(e)=>{customOutputFn(e)}}>
       {outputs.map((dot,index) => {
         return (
           <div 
