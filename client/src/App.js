@@ -18,6 +18,7 @@ function App() {
   */
 
   //Graph const
+  // eslint-disable-next-line no-unused-vars
   const graph = new Graph({multi: true, allowSelfLoops: false, type: 'directed'});
 
   //Refs
@@ -103,12 +104,20 @@ function App() {
       alert('Please write a name');
       // I should also check that nInputs and nOutputs is bigger than 0 and is connected!
     } else {
+      const palette = [
+        '#011627',
+        // '#FDFFFC', This is white... I dont want white yet
+        '#2EC4B6',
+        '#E71D36',
+        '#FF9F1C'
+      ]
+
       const newComponent = {
         name: componentName, 
         nInputs: inputs.length,
         nOutputs: outputs.length,
-        formula: undefined, //The formula should be connected based on the path and the components used
-        bgColor: undefined //Should assing random color
+        formula: 'customFormula', //The formula should be connected based on the path and the components used
+        bgColor: palette[Math.floor(Math.random()*palette.length)]
       }
 
       setComponentList([...componentList, newComponent])
@@ -130,12 +139,11 @@ function App() {
     if(!dropZone.current) {
       return;
     }
-    //lets try to get coords
     //dragItem && dropZone are the events, to acces the div need to check .target
-    // console.clear()
     const a = dragItem.current
     const b = dropZone.current
-    const {formula, ninputs, noutputs, bgcolor} = a.target.attributes
+    console.log(a.target.attributes)
+    const {ninputs, noutputs, formula, bgcolor} = a.target.attributes
 
     const node = {
       name: a.target.innerText,
