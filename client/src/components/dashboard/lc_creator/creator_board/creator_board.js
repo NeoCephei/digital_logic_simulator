@@ -14,6 +14,9 @@ function CreatorBoard (props) {
   function dropping (e) {
     handleDragEnd(e);
   }
+  function boardItemClick (e) {
+    customBoardFn(e);
+  }
 
   return (
     <div id="creator_board" className="creator_board" onDragEnter={entering} onDragEnd={dropping}>
@@ -21,8 +24,9 @@ function CreatorBoard (props) {
         return (
           <div 
             key = {index}
-            dot_id = {index}
-            className = 'board_item' 
+            board_item_id = {index}
+            className = 'board_item'
+            onClick={boardItemClick}
             style = {{
               top: item.relTop, 
               left: item.relLeft,

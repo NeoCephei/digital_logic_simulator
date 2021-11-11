@@ -36,14 +36,14 @@ function App() {
       nInputs: 2,
       nOutputs: 1,
       formula: '&',
-      bgColor: '#2F87B0'
+      bgColor: '#43AA8B'
     },
     {      
       name: 'Not',
       nInputs: 1,
       nOutputs: 1,
       formula: '~',
-      bgColor: '#9C241B'
+      bgColor: '#F94144'
     }
   ])
 
@@ -82,8 +82,16 @@ function App() {
       setOutputs([...outputs, newDot]);
     }
   }
-  function customBoardFn (e) {
-
+  function customBoardFn (e) { //Needs improvement
+    const boardItemID = e.target.attributes.board_item_id.value;
+    if (e.ctrlKey) {
+      const newBoard = [...board];
+      // eslint-disable-next-line no-unused-vars
+      const removeIndexItem = newBoard.splice(boardItemID, 1);
+      setBoard(newBoard)
+    } else {
+      // do sth
+    }
   }
   function customSelectorFn (e) {
     const {ninputs, noutputs, formula} = e.target.attributes //Like this i can access LC from selector
@@ -98,18 +106,18 @@ function App() {
   function handleTextInput (e) {
     setComponentName(e.target.value)
   }
-  function handleSubmitInput (e) {
+  function handleSubmitInput (e) { //Needs improvement
     e.preventDefault();
     if (componentName.length < 1) {
       alert('Please write a name');
       // I should also check that nInputs and nOutputs is bigger than 0 and is connected!
     } else {
       const palette = [
-        '#011627',
-        // '#FDFFFC', This is white... I dont want white yet
-        '#2EC4B6',
-        '#E71D36',
-        '#FF9F1C'
+        '#F3722C',
+        '#F8961E',
+        '#F9C74F',
+        '#90BE6D',
+        '#577590'
       ]
 
       const newComponent = {
@@ -142,7 +150,6 @@ function App() {
     //dragItem && dropZone are the events, to acces the div need to check .target
     const a = dragItem.current
     const b = dropZone.current
-    console.log(a.target.attributes)
     const {ninputs, noutputs, formula, bgcolor} = a.target.attributes
 
     const node = {

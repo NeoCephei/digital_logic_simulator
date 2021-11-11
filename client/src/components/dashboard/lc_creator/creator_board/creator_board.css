@@ -19,6 +19,10 @@
   font-variant: small-caps;
   line-height: 30px;
 }
+
+.board_item:hover {
+  cursor: pointer;
+}
 /* .creator_board > h1 {
   color: #757575;
   margin: auto;
