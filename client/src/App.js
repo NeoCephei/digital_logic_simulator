@@ -99,7 +99,10 @@ function App() {
     if (e.ctrlKey) {
       const list = [...componentList];
       const newList = list.filter(comp => comp.name !== name);
+      const tBoard = [...board]
+      const newBoard = tBoard.filter(item => item.name !== name);
       setComponentList(newList);
+      setBoard(newBoard);
     } else {
       // do sth
     }

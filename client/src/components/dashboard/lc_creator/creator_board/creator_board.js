@@ -21,6 +21,7 @@ function CreatorBoard (props) {
   return (
     <div id="creator_board" className="creator_board" onDragEnter={entering} onDragEnd={dropping}>
       {board.map((item,index) => {
+        const itemHeight = `${Math.max(item.ninputs.value,item.noutputs.value)*30}px`;
         return (
           <div 
             key = {index}
@@ -30,9 +31,12 @@ function CreatorBoard (props) {
             style = {{
               top: item.relTop, 
               left: item.relLeft,
-              backgroundColor: item.bgcolor
+              backgroundColor: item.bgcolor,
+              height: itemHeight,
+              lineHeight: itemHeight,
               }}>
             {item.name}
+            
           </div>
         )
       })}

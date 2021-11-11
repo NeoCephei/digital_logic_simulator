@@ -24,6 +24,7 @@ function CreatorInputs (props) {
               top: dot.top, 
               left: dot.left,
               }}>
+            
           </div>
         )
       })}
