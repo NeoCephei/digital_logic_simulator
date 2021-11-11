@@ -18,6 +18,7 @@ function CreatorOutputs (props) {
         return (
           <div 
             key = {index}
+            key_num = {dot.cNode}
             dot_id = {index}
             className = 'output_circle' 
             style = {{

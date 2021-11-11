@@ -104,15 +104,28 @@ function App() {
   }
   function customOutputFn (e) { //Needs improvement
     if (e.target.classList.contains('output_circle')) {
-      const dotIndex = e.target.attributes.dot_id.value;
-      const newOutputs = [...outputs]
-      // eslint-disable-next-line no-unused-vars
-      const removeIndexItem = newOutputs.splice(dotIndex, 1);
+      const dotIndex = e.target.attributes.key_num.value*1;
+      const oldOutputs = [...outputs];
+      const newOutputs = oldOutputs.filter(i => i.cNode !== dotIndex);
+      // remove node from graph
+      const rG = {...realGraph}
+      const oldOutputNodes = [...rG.nodes];
+      const newNodes = oldOutputNodes.filter(node => node.key !== `output_n${dotIndex}`)
+      rG.nodes = [...newNodes];
+      setRealGraph(rG)
       setOutputs(newOutputs);
     } else {
+      //add node to graph
+      const rG = {...realGraph}
+      const keyNum = rG.attributes.n_output_Nodes;
+      const newNode = {key: `output_n${keyNum}`}
+      rG.attributes.n_output_Nodes++;
+      rG.nodes.push(newNode);
+
       //Position of mouse - parentDiv offsetTop - circle.height/2
       const relativeTop = e.clientY - e.target.offsetTop - 10;
-      const newDot = {top: relativeTop, right: '-10px', activated: false}
+      const newDot = {cNode: keyNum, top: relativeTop, right: '-10px', activated: false}
+      setRealGraph(rG)
       setOutputs([...outputs, newDot]);
     }
   }
