@@ -17,17 +17,27 @@ components have these properties:
 function LcSelector (props) {
 
   const {magicProps} = useContext(globalContext);
-  const {componentList, customSelectorFn} = magicProps;
+  const {componentList, customSelectorFn, handleDragStart} = magicProps;
 
   function customFn (e) {
     customSelectorFn(e);
   }
+  function dragging (e) {
+    handleDragStart(e);
+  }
 
   return (
-    <div className="lc_selector" onClick={customFn}>
+    <div className="lc_selector">
       {componentList.map((item,index) => {
         return (
-          <div key = {index} className = 'selector_item' noutputs = {item.nOutput} ninputs = {item.nInputs}>
+          <div 
+            key = {index} 
+            className = 'selector_item'
+            onClick={customFn}
+            onDrag={dragging}
+            draggable
+            noutputs = {item.nOutputs} ninputs = {item.nInputs} formula = {item.formula} //attributes
+            >
             {item.name}
           </div>
         )
