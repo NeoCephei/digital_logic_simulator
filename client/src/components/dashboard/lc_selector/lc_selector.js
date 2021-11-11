@@ -36,7 +36,8 @@ function LcSelector (props) {
             onClick={customFn}
             onDrag={dragging}
             draggable
-            noutputs = {item.nOutputs} ninputs = {item.nInputs} formula = {item.formula} //attributes
+            noutputs = {item.nOutputs} ninputs = {item.nInputs} // attributes 
+            formula = {item.formula} bgcolor = {item.bgColor} // attributes
             >
             {item.name}
           </div>

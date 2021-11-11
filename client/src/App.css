@@ -4,6 +4,7 @@
   color: #fff;
   font-family: Verdana, Geneva, sans-serif;
   color: #FFFFFF;
+  user-select: none;
 }
 
 *:hover {

@@ -21,8 +21,8 @@ function App() {
   const graph = new Graph({multi: true, allowSelfLoops: false, type: 'directed'});
 
   //Refs
-  const dragItem = useRef()
-  const dropZone = useRef()
+  const dragItem = useRef(null)
+  const dropZone = useRef(null)
 
   //States
   const [componentName, setComponentName] = useState('');
@@ -31,16 +31,18 @@ function App() {
   const [board, setBoard] = useState([])
   const [componentList, setComponentList] = useState([
     {
-      name: 'AND',
+      name: 'And',
       nInputs: 2,
       nOutputs: 1,
       formula: '&',
+      bgColor: '#2F87B0'
     },
     {      
-      name: 'NOT',
+      name: 'Not',
       nInputs: 1,
       nOutputs: 1,
       formula: '~',
+      bgColor: '#9C241B'
     }
   ])
 
@@ -105,7 +107,8 @@ function App() {
         name: componentName, 
         nInputs: inputs.length,
         nOutputs: outputs.length,
-        formula: undefined //The formula should be connected based on the path and the components used
+        formula: undefined, //The formula should be connected based on the path and the components used
+        bgColor: undefined //Should assing random color
       }
 
       setComponentList([...componentList, newComponent])
@@ -115,8 +118,8 @@ function App() {
     }
   }
   function handleDragStart(e) {
-    dragItem.current = e.target;
-    dragItem.current.addEventListener('dragend', handleDragEnd);
+    dragItem.current = e;
+    dragItem.current.target.addEventListener('dragend', handleDragEnd);
   }
   function handleDragEnter (e) {
     if (e.target.classList.contains('creator_board')) {
@@ -124,12 +127,29 @@ function App() {
     }
   }
   function handleDragEnd(e) {
+    if(!dropZone.current) {
+      return;
+    }
     //lets try to get coords
-    console.clear()
+    //dragItem && dropZone are the events, to acces the div need to check .target
+    // console.clear()
     const a = dragItem.current
-    const b = dropZone.current.target
-    console.log(a,b)
+    const b = dropZone.current
+    const {formula, ninputs, noutputs, bgcolor} = a.target.attributes
 
+    const node = {
+      name: a.target.innerText,
+      relTop: e.clientY- b.target.offsetTop,
+      relLeft: e.clientX - b.target.offsetLeft,
+      ninputs, 
+      noutputs, 
+      formula: formula.value,
+      bgcolor: bgcolor.value
+    }
+
+    setBoard([...board,node])
+
+    dragItem.current.target.removeEventListener('dragend', handleDragEnd);
     dragItem.current = null;
     dropZone.current = null;
   }

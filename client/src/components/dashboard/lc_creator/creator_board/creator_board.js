@@ -17,7 +17,21 @@ function CreatorBoard (props) {
 
   return (
     <div id="creator_board" className="creator_board" onDragEnter={entering} onDragEnd={dropping}>
-      <h1>Hello from CREATOR_BOARD</h1>
+      {board.map((item,index) => {
+        return (
+          <div 
+            key = {index}
+            dot_id = {index}
+            className = 'board_item' 
+            style = {{
+              top: item.relTop, 
+              left: item.relLeft,
+              backgroundColor: item.bgcolor
+              }}>
+            {item.name}
+          </div>
+        )
+      })}
     </div>
   )
 }
