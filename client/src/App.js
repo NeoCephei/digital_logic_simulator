@@ -93,13 +93,16 @@ function App() {
       // do sth
     }
   }
-  function customSelectorFn (e) {
-    const {ninputs, noutputs, formula} = e.target.attributes //Like this i can access LC from selector
-    console.clear()
-    console.log(e)
-    console.log(e.target.attributes)
-
-    console.log('Inputs: ',ninputs,' Outputs: ',noutputs,' Formula: ',formula)
+  function customSelectorFn (e) { //Needs improvement
+    const name = e.target.innerText;
+    if (name === 'And' || name === 'Not') return
+    if (e.ctrlKey) {
+      const list = [...componentList];
+      const newList = list.filter(comp => comp.name !== name);
+      setComponentList(newList);
+    } else {
+      // do sth
+    }
   }
 
   // // Handlers
@@ -108,8 +111,8 @@ function App() {
   }
   function handleSubmitInput (e) { //Needs improvement
     e.preventDefault();
-    if (componentName.length < 1) {
-      alert('Please write a name');
+    if (componentName.length < 1 || componentName === 'And' || componentName === 'Not') {
+      alert('Please write a valid name');
       // I should also check that nInputs and nOutputs is bigger than 0 and is connected!
     } else {
       const palette = [
@@ -132,6 +135,7 @@ function App() {
       setComponentName('')
       setInputs([])
       setOutputs([])
+      setBoard([])
     }
   }
   function handleDragStart(e) {
