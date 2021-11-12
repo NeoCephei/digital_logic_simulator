@@ -68,7 +68,7 @@ function App() {
   ])
 
   //Injected functions
-  function customInputFn (e) { //Needs improvement
+  function customInputFn (e) { //Create input circle and node in graph
     if (e.target.classList.contains('input_circle')) {
       const dotIndex = e.target.attributes.key_num.value*1;
       if (e.ctrlKey) {
@@ -88,6 +88,9 @@ function App() {
         const newInputs = oldInputs.filter(i => i.cNode !== dotIndex);
         setInputs([...newInputs, targetInput]);
       }
+    } else if (e.target.classList.contains('small_dot')) {
+      console.log('you press small dot')
+      console.log(e.clientX, e.clientY)
     } else {
       //add node to graph
       const rG = {...realGraph}
@@ -102,7 +105,7 @@ function App() {
       setInputs([...inputs, newDot]);
     }
   }
-  function customOutputFn (e) { //Needs improvement
+  function customOutputFn (e) { //Create output circle and node in graph
     if (e.target.classList.contains('output_circle')) {
       const dotIndex = e.target.attributes.key_num.value*1;
       const oldOutputs = [...outputs];
@@ -114,6 +117,9 @@ function App() {
       rG.nodes = [...newNodes];
       setRealGraph(rG)
       setOutputs(newOutputs);
+    } else if (e.target.classList.contains('small_output_dot')) {
+      console.log('you press small output dot')
+      console.log(e.clientX, e.clientY)
     } else {
       //add node to graph
       const rG = {...realGraph}
@@ -129,18 +135,18 @@ function App() {
       setOutputs([...outputs, newDot]);
     }
   }
-  function customBoardFn (e) { //Needs improvement
-    const boardItemID = e.target.attributes.board_item_id.value;
-    if (e.ctrlKey) {
-      const newBoard = [...board];
-      // eslint-disable-next-line no-unused-vars
-      const removeIndexItem = newBoard.splice(boardItemID, 1);
-      setBoard(newBoard)
-    } else {
-      // do sth
+  function customBoardFn (e) { //Removes component from board
+    if(e.target.className === 'board_item'){
+      const boardItemID = e.target.attributes.board_item_id.value;
+      if (e.ctrlKey) {
+        const newBoard = [...board];
+        // eslint-disable-next-line no-unused-vars
+        const removeIndexItem = newBoard.splice(boardItemID, 1);
+        setBoard(newBoard)
+      }
     }
   }
-  function customSelectorFn (e) { //Needs improvement
+  function customSelectorFn (e) { //Removes component from selector
     const name = e.target.innerText;
     if (name === 'And' || name === 'Not') return
     if (e.ctrlKey) {
@@ -150,69 +156,75 @@ function App() {
       const newBoard = tBoard.filter(item => item.name !== name);
       setComponentList(newList);
       setBoard(newBoard);
-    } else {
-      // do sth
     }
   }
 
   // // Handlers
-  function handleTextInput (e) {
+  function handleTextInput (e) { //Sets the componentName state (input text)
     setComponentName(e.target.value)
   }
-  function handleSubmitInput (e) { //Needs improvement
+  function handleSubmitInput (e) { //Actions to be done when press btn "Create"
     e.preventDefault();
 
     const g = graph.import(realGraph)
     console.log(g.nodes());
-    // if (componentName.length < 1 || componentName === 'And' || componentName === 'Not') {
-    //   alert('Please write a valid name');
-    //   // I should also check that nInputs and nOutputs is bigger than 0 and is connected!
-    // } else {
-    //   const palette = [
-    //     '#F3722C',
-    //     '#F8961E',
-    //     '#F9C74F',
-    //     '#90BE6D',
-    //     '#577590'
-    //   ]
+    // I can work with the graph here to make checks
 
-    //   const newComponent = {
-    //     name: componentName, 
-    //     nInputs: inputs.length,
-    //     nOutputs: outputs.length,
-    //     formula: 'customFormula', //The formula should be connected based on the path and the components used
-    //     bgColor: palette[Math.floor(Math.random()*palette.length)]
-    //   }
+    if (componentName.length < 1 || componentName === 'And' || componentName === 'Not') {
+      alert('Please write a valid name');
+      // I should also check that nInputs and nOutputs is bigger than 0 and is connected!
+    } else {
+      const palette = [
+        '#F94144',
+        '#F3722C',
+        '#F8961E',
+        '#F9844A',
+        '#F9C74F',
+        '#90BE6D',
+        '#43AA8B',
+        '#4D908E',
+        '#577590',
+        '#277DA1'
+      ]
 
-    //   setComponentList([...componentList, newComponent])
-    //   setComponentName('')
-    //   setInputs([])
-    //   setOutputs([])
-    //   setBoard([])
-    // }
+      const newComponent = {
+        name: componentName, 
+        nInputs: inputs.length,
+        nOutputs: outputs.length,
+        formula: 'customFormula', //The formula should be connected based on the path and the components used
+        bgColor: palette[Math.floor(Math.random()*palette.length)]
+      }
+
+      setComponentList([...componentList, newComponent])
+      setComponentName('')
+      setInputs([])
+      setOutputs([])
+      setBoard([])
+    }
   }
-  function handleDragStart(e) {
+  function handleDragStart(e) { //Handle DragStart from selector
     dragItem.current = e;
     dragItem.current.target.addEventListener('dragend', handleDragEnd);
   }
-  function handleDragEnter (e) {
-    if (e.target.classList.contains('creator_board')) {
+  function handleDragEnter (e) { //Checks if you enter the board while dragging
+    if (e.target.parentNode.classList.contains('creator_board')) {
       dropZone.current = e;
     }
   }
-  function handleDragEnd(e) {
+  function handleDragEnd(e) { //Fires when "drop"
     if(!dropZone.current) {
       return;
     }
     //dragItem && dropZone are the events, to acces the div need to check .target
+    //and also .target.parent node as the svg is on front
     const a = dragItem.current
     const b = dropZone.current
-    const {ninputs, noutputs, formula, bgcolor} = a.target.attributes
+    const {ninputs, noutputs, formula, bgcolor} = a.target.attributes;
 
     const node = {
       name: a.target.innerText,
-      relTop: e.clientY- b.target.offsetTop,
-      relLeft: e.clientX - b.target.offsetLeft,
+      relTop: e.clientY- b.target.parentNode.offsetTop,
+      relLeft: e.clientX - b.target.parentNode.offsetLeft,
       ninputs, 
       noutputs, 
       formula: formula.value,
