@@ -32,6 +32,9 @@ function CreatorBoard (props) {
           <div 
             key = {index}
             board_item_id = {index}
+            board_item_identifier = {`${item.name}_${item.nComponent}`}
+            ninputs = {nInputs}
+            noutputs = {nOutputs}
             className = 'board_item'
             onClick={(e)=>{customBoardFn(e)}}
             style = {{
