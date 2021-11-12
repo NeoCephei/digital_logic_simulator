@@ -23,6 +23,7 @@ function CreatorInputs (props) {
             }}>
             <div className = {!dot.activated ? 'small_dot' : 'small_dot dot_activated'} 
               key_num = {dot.cNode}
+              identifier = {`input_n${dot.cNode}`}
               onClick={(e)=>{edgeCreator(e)}}
             />
           </div>

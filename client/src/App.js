@@ -47,7 +47,7 @@ function App() {
   //States
   const [realGraph , setRealGraph] = useState(defaultGraph)
   const [edges, setEdges] = useState([])
-  const [firstCoord, setFirstCoord] = useState({x: -1, y: -1})
+  const [firstCoord, setFirstCoord] = useState({x: -1, y: -1, source: ''})
   const [componentName, setComponentName] = useState('');
   const [inputs, setInputs] = useState([])
   const [outputs, setOutputs] = useState([])
@@ -201,6 +201,7 @@ function App() {
       setComponentName('')
       setInputs([])
       setOutputs([])
+      setEdges([])
       setBoard([])
     }
   }
@@ -242,7 +243,7 @@ function App() {
     dropZone.current = null;
   }
   function edgeCreator(e) {
-    console.log(e)
+    console.log(e.target)
     // I know the offSet is x:30 y:166 cause the board offSet but I should be able to get it anyway
     const boardOffset = {x: 30, y: 166}
     if (firstCoord.x < 0 && firstCoord.y < 0) {

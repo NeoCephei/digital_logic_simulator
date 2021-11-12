@@ -19,11 +19,11 @@ function CreatorBoard (props) {
         for (let i = 0; i < nInputs; i++) {
           inputDiv.push(<div className="nodeComponent" id={i} key={i} onClick={(e)=>{edgeCreator(e)}}/>);
         }
-
         const outputDiv = [];
         for (let i = 0; i < nOutputs; i++) {
           outputDiv.push(<div className="nodeComponent" id={i} key={i} onClick={(e)=>{edgeCreator(e)}}/>);
         }
+        
         return (
           <div 
             key = {index}
@@ -39,20 +39,20 @@ function CreatorBoard (props) {
             }}
           >
             {item.name}
-            <div className="item_inputs" 
-              style = {{
-                height: itemHeight,
-              }}
-            >
-              {inputDiv}
-            </div>
-            <div className="item_outputs" 
-              style = {{
-                height: itemHeight,
-              }}
-            >
-              {outputDiv}
-            </div>
+          <div className="item_inputs" 
+            style = {{
+              height: itemHeight,
+            }}
+          >
+            {inputDiv}
+          </div>
+          <div className="item_outputs" 
+            style = {{
+              height: itemHeight,
+            }}
+          >
+            {outputDiv}
+          </div>
           </div>
         )
       })}
