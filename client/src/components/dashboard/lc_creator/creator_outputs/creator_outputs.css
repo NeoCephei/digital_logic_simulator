@@ -23,6 +23,7 @@
   left: -20px;
 
   background-color:#fff;
+  z-index: 4;
 }
 .small_output_dot:hover{
   cursor: pointer;

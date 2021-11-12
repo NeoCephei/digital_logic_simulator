@@ -6,7 +6,7 @@ import globalContext from '../../../../services/globalContext'
 function CreatorInputs (props) {
 
   const {magicProps} = useContext(globalContext)
-  const {inputs, customInputFn} = magicProps
+  const {inputs, customInputFn, edgeCreator} = magicProps
 
   return (
     <div id="creator_inputs" className="creator_inputs creator_redzone" onClick={(e)=>{customInputFn(e)}}>
@@ -21,7 +21,10 @@ function CreatorInputs (props) {
               top: dot.top, 
               left: dot.left,
             }}>
-            <div className = {!dot.activated ? 'small_dot' : 'small_dot dot_activated'} key_num = {dot.cNode}/>
+            <div className = {!dot.activated ? 'small_dot' : 'small_dot dot_activated'} 
+              key_num = {dot.cNode}
+              onClick={(e)=>{edgeCreator(e)}}
+            />
           </div>
         )
       })}

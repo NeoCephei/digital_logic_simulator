@@ -24,11 +24,12 @@
   left: 25px;
 
   background-color:#fff;
-  z-index: 9;
+  z-index: 4;
 }
 .small_dot:hover{
   cursor: pointer;
 }
 .dot_activated{
   background-color: #ec2239;
+  z-index: 4;
 }

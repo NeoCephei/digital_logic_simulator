@@ -6,7 +6,7 @@ import globalContext from '../../../../services/globalContext'
 function CreatorBoard (props) {
 
   const {magicProps} = useContext(globalContext);
-  const {board, customBoardFn, handleDragEnter, handleDragEnd} = magicProps;
+  const {board, edges, customBoardFn, handleDragEnter, handleDragEnd, edgeCreator} = magicProps;
 
   return (
     <div id="creator_board" className="creator_board" onDragEnter={(e)=>{handleDragEnter(e)}} onDragEnd={(e)=>{handleDragEnd(e)}}>
@@ -17,12 +17,12 @@ function CreatorBoard (props) {
 
         const inputDiv = [];
         for (let i = 0; i < nInputs; i++) {
-          inputDiv.push(<div className="nodeComponent" id={i} key={i} />);
+          inputDiv.push(<div className="nodeComponent" id={i} key={i} onClick={(e)=>{edgeCreator(e)}}/>);
         }
 
         const outputDiv = [];
         for (let i = 0; i < nOutputs; i++) {
-          outputDiv.push(<div className="nodeComponent" id={i} key={i} />);
+          outputDiv.push(<div className="nodeComponent" id={i} key={i} onClick={(e)=>{edgeCreator(e)}}/>);
         }
         return (
           <div 
@@ -56,7 +56,16 @@ function CreatorBoard (props) {
           </div>
         )
       })}
-      <svg className="line_holder"></svg>
+      <svg className="line_holder">
+        {edges.map((line,i) => {
+          return (
+            <line key={i} 
+              x1={line.x1} y1={line.y1} x2={line.x2} y2={line.y2} 
+              style={{stroke: '#fff', strokeWidth: 1.5}}
+            />
+          )
+        })}
+      </svg>
     </div>
   )
 }

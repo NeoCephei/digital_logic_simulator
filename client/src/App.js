@@ -46,6 +46,8 @@ function App() {
 
   //States
   const [realGraph , setRealGraph] = useState(defaultGraph)
+  const [edges, setEdges] = useState([])
+  const [firstCoord, setFirstCoord] = useState({x: -1, y: -1})
   const [componentName, setComponentName] = useState('');
   const [inputs, setInputs] = useState([])
   const [outputs, setOutputs] = useState([])
@@ -66,6 +68,8 @@ function App() {
       bgColor: '#F94144'
     }
   ])
+
+  //Functional functions
 
   //Injected functions
   function customInputFn (e) { //Create input circle and node in graph
@@ -89,8 +93,7 @@ function App() {
         setInputs([...newInputs, targetInput]);
       }
     } else if (e.target.classList.contains('small_dot')) {
-      console.log('you press small dot')
-      console.log(e.clientX, e.clientY)
+      // I COULD TRY TO DO STH HERE
     } else {
       //add node to graph
       const rG = {...realGraph}
@@ -118,8 +121,7 @@ function App() {
       setRealGraph(rG)
       setOutputs(newOutputs);
     } else if (e.target.classList.contains('small_output_dot')) {
-      console.log('you press small output dot')
-      console.log(e.clientX, e.clientY)
+      // I COULD TRY TO DO STH HERE
     } else {
       //add node to graph
       const rG = {...realGraph}
@@ -221,6 +223,8 @@ function App() {
     const b = dropZone.current
     const {ninputs, noutputs, formula, bgcolor} = a.target.attributes;
 
+    console.log(b.target.parentNode.offsetTop, b.target.parentNode.offsetLeft)
+
     const node = {
       name: a.target.innerText,
       relTop: e.clientY- b.target.parentNode.offsetTop,
@@ -237,13 +241,32 @@ function App() {
     dragItem.current = null;
     dropZone.current = null;
   }
+  function edgeCreator(e) {
+    console.log(e)
+    // I know the offSet is x:30 y:166 cause the board offSet but I should be able to get it anyway
+    const boardOffset = {x: 30, y: 166}
+    if (firstCoord.x < 0 && firstCoord.y < 0) {
+      setFirstCoord({x:e.clientX - boardOffset.x , y:e.clientY - boardOffset.y});
+    } else {
+      const secondCoord = {x:e.clientX - boardOffset.x, y:e.clientY - boardOffset.y}
+      const newLine = {
+        x1 : firstCoord.x,
+        x2 : secondCoord.x,
+        y1 : firstCoord.y,
+        y2 : secondCoord.y
+      }
+      setEdges([...edges, newLine])
+      setFirstCoord({x: -1, y: -1})
+    }
+  }
+
 
   //Massive object to pass props
-  //I have to make all the calls as cb inside the jsx of each component
   const magicProps = {
+    edgeCreator, //common for lc_inputs lc_outputs lc_board
     inputs, customInputFn, //lc_inputs component props
     outputs, customOutputFn, //lc_outputs component props
-    board, customBoardFn, handleDragEnter, handleDragEnd,//lc_board component props
+    board, edges, customBoardFn, handleDragEnter, handleDragEnd,//lc_board component props
     componentName, handleTextInput, handleSubmitInput, //lc_form component props
     componentList, customSelectorFn, handleDragStart, //lc_selector component props
   }

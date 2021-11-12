@@ -6,7 +6,7 @@ import globalContext from '../../../../services/globalContext'
 function CreatorOutputs (props) {
 
   const {magicProps} = useContext(globalContext)
-  const {outputs, customOutputFn} = magicProps
+  const {outputs, customOutputFn, edgeCreator} = magicProps
 
   return (
     <div id="creator_outputs" className="creator_outputs creator_redzone" onClick={(e)=>{customOutputFn(e)}}>
@@ -21,7 +21,10 @@ function CreatorOutputs (props) {
               top: dot.top, 
               right: dot.right,
             }}>
-            <div className = 'small_output_dot' key_num = {dot.cNode}/>
+            <div className = 'small_output_dot' 
+              key_num = {dot.cNode}
+              onClick={(e)=>{edgeCreator(e)}}
+            />
           </div>
         )
       })}
