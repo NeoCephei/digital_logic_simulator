@@ -23,7 +23,7 @@ function CreatorOutputs (props) {
             }}>
             <div className = 'small_output_dot' 
               key_num = {dot.cNode}
-              identifier = {`ouput_n${dot.cNode}`}
+              identifier = {`output_n${dot.cNode}`}
               onClick={(e)=>{edgeCreator(e)}}
             />
           </div>

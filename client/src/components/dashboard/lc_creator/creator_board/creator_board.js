@@ -17,13 +17,17 @@ function CreatorBoard (props) {
 
         const inputDiv = [];
         for (let i = 0; i < nInputs; i++) {
-          inputDiv.push(<div className="nodeComponent" id={i} key={i} onClick={(e)=>{edgeCreator(e)}}/>);
+          inputDiv.push(<div className="nodeComponent" id={i} key={i} 
+          identifier={`nodeComponent_${item.name}_${item.nComponent}_I_${i}`}
+          onClick={(e)=>{edgeCreator(e)}}/>);
         }
         const outputDiv = [];
         for (let i = 0; i < nOutputs; i++) {
-          outputDiv.push(<div className="nodeComponent" id={i} key={i} onClick={(e)=>{edgeCreator(e)}}/>);
+          outputDiv.push(<div className="nodeComponent" id={i} key={i} 
+          identifier={`nodeComponent_${item.name}_${item.nComponent}_O_${i}`}
+          onClick={(e)=>{edgeCreator(e)}}/>);
         }
-        
+
         return (
           <div 
             key = {index}
@@ -60,8 +64,9 @@ function CreatorBoard (props) {
         {edges.map((line,i) => {
           return (
             <line key={i} 
-              x1={line.x1} y1={line.y1} x2={line.x2} y2={line.y2} 
-              style={{stroke: '#fff', strokeWidth: 1.5}}
+              x1={line.x1} y1={line.y1} x2={line.x2} y2={line.y2}
+              identifier = {line.key}
+              style={{stroke: line.color, strokeWidth: 1.5}}
             />
           )
         })}

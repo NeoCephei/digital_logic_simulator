@@ -75,21 +75,41 @@ function App() {
   function customInputFn (e) { //Create input circle and node in graph
     if (e.target.classList.contains('input_circle')) {
       const dotIndex = e.target.attributes.key_num.value*1;
-      if (e.ctrlKey) {
+      if (e.ctrlKey) { //remove node
         const oldInputs = [...inputs];
         const newInputs = oldInputs.filter(i => i.cNode !== dotIndex);
-        // remove node from graph
+        // remove node and edge from graph
         const rG = {...realGraph}
         const oldInputNodes = [...rG.nodes];
         const newNodes = oldInputNodes.filter(node => node.key !== `input_n${dotIndex}`)
         rG.nodes = [...newNodes];
-        setRealGraph(rG)
+        const oldEdges = [...rG.edges]
+        const newEdges = oldEdges.filter(edge => edge.source !== `input_n${dotIndex}` && edge.target !== `input_n${dotIndex}`)
+        rG.edges = [...newEdges]
+        //should remove edges from state
+        const oldLines = [...edges];
+        const newLines = oldLines.filter(line => line.source !== `input_n${dotIndex}` && line.target !== `input_n${dotIndex}`)
+
+        setEdges([...newLines]);
         setInputs(newInputs);
+        setRealGraph(rG)
       } else {
         const oldInputs = [...inputs];
         const targetInput = oldInputs.filter(i => i.cNode === dotIndex)[0];
         targetInput.activated = !targetInput.activated
         const newInputs = oldInputs.filter(i => i.cNode !== dotIndex);
+
+        const oldLines = [...edges];
+        const targetLine = oldLines.filter(line => line.source === `input_n${dotIndex}` || line.target === `input_n${dotIndex}`)
+        
+        for (let i = 0; i < targetLine.length; i++) {
+          if (targetLine[i].color === '#fff') targetLine[i].color = '#ec2239'
+          else targetLine[i].color = '#fff'
+        }
+
+        const newLines = oldLines.filter(line => line.source !== `input_n${dotIndex}` && line.target !== `input_n${dotIndex}`)
+
+        setEdges([...newLines, ...targetLine])
         setInputs([...newInputs, targetInput]);
       }
     } else if (e.target.classList.contains('small_dot')) {
@@ -113,11 +133,19 @@ function App() {
       const dotIndex = e.target.attributes.key_num.value*1;
       const oldOutputs = [...outputs];
       const newOutputs = oldOutputs.filter(i => i.cNode !== dotIndex);
-      // remove node from graph
+      // remove node and edge from graph
       const rG = {...realGraph}
       const oldOutputNodes = [...rG.nodes];
       const newNodes = oldOutputNodes.filter(node => node.key !== `output_n${dotIndex}`)
       rG.nodes = [...newNodes];
+      const oldEdges = [...rG.edges]
+      const newEdges = oldEdges.filter(edge => edge.source !== `output_n${dotIndex}` && edge.target !== `output_n${dotIndex}`)
+      rG.edges = [...newEdges]
+      //should remove edges from state
+      const oldLines = [...edges];
+      const newLines = oldLines.filter(line => line.source !== `output_n${dotIndex}` && line.target !== `output_n${dotIndex}`)
+
+      setEdges([...newLines]);
       setRealGraph(rG)
       setOutputs(newOutputs);
     } else if (e.target.classList.contains('small_output_dot')) {
@@ -169,7 +197,7 @@ function App() {
     e.preventDefault();
 
     const g = graph.import(realGraph)
-    console.log(g.nodes());
+    console.log('Graph Nodes: ',g.nodes(), 'Graph Edges: ',g.edges());
     // I can work with the graph here to make checks
 
     if (componentName.length < 1 || componentName === 'And' || componentName === 'Not') {
@@ -203,6 +231,7 @@ function App() {
       setOutputs([])
       setEdges([])
       setBoard([])
+      setRealGraph(defaultGraph)
     }
   }
   function handleDragStart(e) { //Handle DragStart from selector
@@ -224,10 +253,13 @@ function App() {
     const b = dropZone.current
     const {ninputs, noutputs, formula, bgcolor} = a.target.attributes;
 
-    console.log(b.target.parentNode.offsetTop, b.target.parentNode.offsetLeft)
+    const tmpBoard = [...board];
+    const name = a.target.innerText;
+    const counter = tmpBoard.filter(n => n.name === name);
 
     const node = {
-      name: a.target.innerText,
+      name: name,
+      nComponent: counter.length,
       relTop: e.clientY- b.target.parentNode.offsetTop,
       relLeft: e.clientX - b.target.parentNode.offsetLeft,
       ninputs, 
@@ -236,6 +268,22 @@ function App() {
       bgcolor: bgcolor.value
     }
 
+    //add node to graph
+    const componentNodes = [];
+    const nI = ninputs.value
+    const nO = noutputs.value
+
+    for (let i = 0; i < nI; i++) {
+      componentNodes.push({key:`nodeComponent_${name}_${counter.length}_I_${i}`})
+    }
+    for (let i = 0; i < nO; i++) {
+      componentNodes.push({key:`nodeComponent_${name}_${counter.length}_O_${i}`})
+    }
+    const rG = {...realGraph};
+    const rGNodes = [...rG.nodes];
+    rG.nodes = [...rGNodes, ...componentNodes];
+
+    setRealGraph(rG)
     setBoard([...board,node])
 
     dragItem.current.target.removeEventListener('dragend', handleDragEnd);
@@ -243,21 +291,36 @@ function App() {
     dropZone.current = null;
   }
   function edgeCreator(e) {
-    console.log(e.target)
     // I know the offSet is x:30 y:166 cause the board offSet but I should be able to get it anyway
     const boardOffset = {x: 30, y: 166}
+    const identifier = e.target.attributes.identifier.value;
+
     if (firstCoord.x < 0 && firstCoord.y < 0) {
-      setFirstCoord({x:e.clientX - boardOffset.x , y:e.clientY - boardOffset.y});
+      setFirstCoord({x:e.clientX - boardOffset.x , y:e.clientY - boardOffset.y, source: identifier});
     } else {
-      const secondCoord = {x:e.clientX - boardOffset.x, y:e.clientY - boardOffset.y}
+      const secondCoord = {x:e.clientX - boardOffset.x, y:e.clientY - boardOffset.y, target: identifier}
       const newLine = {
         x1 : firstCoord.x,
         x2 : secondCoord.x,
         y1 : firstCoord.y,
-        y2 : secondCoord.y
+        y2 : secondCoord.y,
+        key: `${firstCoord.source}->${secondCoord.target}`,
+        source: firstCoord.source,
+        target: secondCoord.target,
+        color: '#fff'
       }
+
+      const edge = {
+        key: `${firstCoord.source}->${secondCoord.target}`,
+        source: firstCoord.source,
+        target: secondCoord.target,
+      }
+      const rG = {...realGraph};
+      rG.edges.push(edge);
+
       setEdges([...edges, newLine])
-      setFirstCoord({x: -1, y: -1})
+      setFirstCoord({x: -1, y: -1, source: ''})
+      setRealGraph(rG)
     }
   }
 
