@@ -6,10 +6,31 @@ import globalContext from '../../../../services/globalContext'
 function CreatorBoard () {
 
   const {magicProps} = useContext(globalContext);
-  const {board, realGraph, customBoardFn, handleDragEnter, handleDragEnd, edgeCreator} = magicProps;
+  const {realGraph, customBoardFn, handleDragEnter, handleDragEnd, edgeCreator} = magicProps;
 
-  // const nodes = [...realGraph.nodes]
+  const nodes = [...realGraph.nodes]
   const edges = [...realGraph.edges]
+
+  // I need to figure it out how to get all the nodes that are nodeComponent only
+  // were its attributes will be the nodes I need for board, so I can get rid of board
+  const components = nodes.filter(node => node.key.split('_').includes('nodeComponent'))
+  const uniqueElements = filterNodes(components)
+
+  // Gets array of components node and returns unique values
+  function filterNodes(components) {
+    const keys = [];
+    components.forEach(input => keys.push(input.key.split('_').slice(0, 3).join('_')));
+    const filter = [...new Set(keys)]
+    const uniqComponents = []
+    filter.forEach(key => {
+      uniqComponents.push(components.find(i => i.key.split('_').slice(0, 3).join('_') === key))
+    })
+    return uniqComponents;
+  }
+
+  // Creates a board based on the attributes
+  const board = []
+  uniqueElements.forEach(i => board.push(i.attributes))
 
   return (
     <div id="creator_board" className="creator_board" onDragEnter={(e)=>{handleDragEnter(e)}} onDragEnd={(e)=>{handleDragEnd(e)}}>
