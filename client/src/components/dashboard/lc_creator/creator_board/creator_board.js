@@ -38,18 +38,33 @@ function CreatorBoard () {
         const nInputs = item.ninputs.value;
         const nOutputs = item.noutputs.value;
         const itemHeight = `${Math.max(nInputs,nOutputs)*30}px`;
+        
 
         const inputDiv = [];
         for (let i = 0; i < nInputs; i++) {
-          inputDiv.push(<div className="nodeComponent" id={i} key={i} 
-          identifier={`nodeComponent_${item.name}_${item.nComponent}_I_${i}`}
-          onClick={(e)=>{edgeCreator(e)}}/>);
+          const colr = item.inputState[i] ? '#ec2239' : '#fff';
+          inputDiv.push(<div 
+            className="nodeComponent" id={i} key={i} 
+            identifier={`nodeComponent_${item.name}_${item.nComponent}_I_${i}`}
+            onClick={(e)=>{edgeCreator(e)}}
+            style = {{
+              backgroundColor:colr
+            }}
+            />
+          );
         }
         const outputDiv = [];
         for (let i = 0; i < nOutputs; i++) {
-          outputDiv.push(<div className="nodeComponent" id={i} key={i} 
-          identifier={`nodeComponent_${item.name}_${item.nComponent}_O_${i}`}
-          onClick={(e)=>{edgeCreator(e)}}/>);
+          const colr = item.outputState[i] ? '#ec2239' : '#fff'; 
+          outputDiv.push(<div 
+            className="nodeComponent" id={i} key={i} 
+            identifier={`nodeComponent_${item.name}_${item.nComponent}_O_${i}`}
+            onClick={(e)=>{edgeCreator(e)}}
+            style = {{
+              backgroundColor:colr
+            }}
+            />
+          );
         }
 
         return (
@@ -93,7 +108,7 @@ function CreatorBoard () {
             <line key={i} 
               x1={line.attributes.x1} y1={line.attributes.y1} x2={line.attributes.x2} y2={line.attributes.y2}
               identifier = {line.attributes.key}
-              style={{stroke: line.attributes.color, strokeWidth: 1.5}}
+              style={{stroke: line.attributes.color, strokeWidth: 2}}
             />
           )
         })}

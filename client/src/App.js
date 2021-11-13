@@ -78,6 +78,14 @@ function App() {
   ])
 
   //Functional functions
+  function activateNode(keyNode) {
+    const tKey = keyNode.split('_').slice(0, 4).join('_');
+    console.log(tKey)
+    const rG = {...realGraph}
+    const oldNodes = [...rG.nodes]; 
+    // targetNodes = oldNodes.filter(node => node.key.split('_').slice(0, 5).join('_'))
+  }
+
 
   //Injected functions
   function customInputFn (e) { //Create input node in graph
@@ -95,29 +103,41 @@ function App() {
         const newEdges = oldEdges.filter(edge => edge.source !== `input_n${dotIndex}` && edge.target !== `input_n${dotIndex}`)
         rG.edges = [...newEdges]
         setRealGraph(rG)
+
       } else { //activate node
         const targetInput = oldInputNodes.filter(i => i.key === `input_n${dotIndex}`)[0];
         targetInput.attributes.activated = !targetInput.attributes.activated
         const newInputs = oldInputNodes.filter(i => i.key !== `input_n${dotIndex}`);
 
         //This should create a path of all the nodes and edges connected to input and activate them
-
-        // const oldLines = [...edges];
-        // const targetLine = oldLines.filter(line => line.source === `input_n${dotIndex}`)
+        const edges = [...rG.edges]
+        const targetLine = edges.filter(line => line.source === `input_n${dotIndex}`)
         // const targetLine = oldLines.filter(line => line.source === `input_n${dotIndex}` || line.target === `input_n${dotIndex}`)
         
-        // for (let i = 0; i < targetLine.length; i++) {
-        //   if (targetLine[i].color === '#fff') targetLine[i].color = '#ec2239'
-        //   else targetLine[i].color = '#fff'
-        // }
+        for (let i = 0; i < targetLine.length; i++) {
+          if (targetLine[i].attributes.color === '#fff') targetLine[i].attributes.color = '#ec2239';
+          else targetLine[i].attributes.color = '#fff';
 
-        // const newLines = oldLines.filter(line => line.source !== `input_n${dotIndex}`)
+          activateNode(targetLine[i].target)
+        }
+
+        const newLines = edges.filter(line => line.source !== `input_n${dotIndex}`)
         // const newLines = oldLines.filter(line => line.source !== `input_n${dotIndex}` && line.target !== `input_n${dotIndex}`)
 
-        // setEdges([...newLines, ...targetLine])
-
+        rG.edges = [...newLines, ...targetLine];
         rG.nodes = [...newInputs, targetInput];
-        setRealGraph(rG)
+        setRealGraph(rG);
+
+
+
+
+
+
+
+
+
+
+        
       }
     } else if (e.target.classList.contains('small_dot')) { //Prevent default and overlapping
       // I COULD TRY TO DO STH HERE
@@ -279,6 +299,7 @@ function App() {
     if (componentName.length < 1 || componentName === 'And' || componentName === 'Not') {
       alert('Please write a valid name');
       // I should also check that nInputs and nOutputs is bigger than 0 and is connected!
+      // And also be sure that there are inputs >= outputs
     } else {
       const palette = [
         '#F94144',
@@ -353,6 +374,16 @@ function App() {
     const componentNodes = [];
     const nI = ninputs.value
     const nO = noutputs.value
+    const inputState = Array(Number(nI)).fill(false)
+    // output should be calculated from input based on formula?
+    let x;
+    if (Number(nI) === 1) {
+      x = !inputState[0]
+    } else {
+      x = inputState.reduce((a,b) => a*b)
+    }
+    // This only works for not and and
+    const outputState = Array(Number(nO)).fill(x);
 
     for (let i = 0; i < nI; i++) {
       componentNodes.push({
@@ -365,7 +396,9 @@ function App() {
           ninputs, 
           noutputs, 
           formula: formula.value,
-          bgcolor: bgcolor.value
+          bgcolor: bgcolor.value,
+          inputState,
+          outputState
         }
       })
     }
@@ -380,7 +413,9 @@ function App() {
           ninputs, 
           noutputs, 
           formula: formula.value,
-          bgcolor: bgcolor.value
+          bgcolor: bgcolor.value,
+          inputState,
+          outputState
         }
       })
     }
@@ -401,8 +436,8 @@ function App() {
     customInputFn, //lc_inputs component props ... inputs
     customOutputFn, //lc_outputs component props
     customBoardFn, handleDragEnter, handleDragEnd,//lc_board component props
-    componentName, handleTextInput, handleSubmitInput, //lc_form component props
     componentList, customSelectorFn, handleDragStart, //lc_selector component props
+    componentName, handleTextInput, handleSubmitInput, //lc_form component props
   }
 
   //Render
