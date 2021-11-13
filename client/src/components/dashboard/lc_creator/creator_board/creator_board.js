@@ -8,6 +8,7 @@ function CreatorBoard () {
   const {magicProps} = useContext(globalContext);
   const {board, realGraph, customBoardFn, handleDragEnter, handleDragEnd, edgeCreator} = magicProps;
 
+  // const nodes = [...realGraph.nodes]
   const edges = [...realGraph.edges]
 
   return (

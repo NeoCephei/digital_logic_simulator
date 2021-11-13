@@ -28,15 +28,27 @@ function App() {
       n_Edges: 0
     },
     nodes: [
-      // {key: 'n0'}, {key: 'input_n0 || output_n0'} for inputs and outputs
-      // {key: 'n1'}, {key: 'nodeComponent_name_number_I||O_number'} --> nodeComponent_And_0_I_1
+      /*{
+        key: 'input_n0 || output_n0' || 'nodeComponent_name_number_I||O_number', --> nodeComponent_And_0_I_1
+        attributes: {}
+      }*/
     ],
     edges: [
-      // {
-      //   key: 'n0->n1',
-      //   source: 'n0',
-      //   target: 'n1',
-      // }
+      /* {
+        key: 'n0->n1',
+        source: 'n0',
+        target: 'n1',
+        attributes: {
+          x1 : firstCoord.x,
+          x2 : secondCoord.x,
+          y1 : firstCoord.y,
+          y2 : secondCoord.y,
+          key: `${firstCoord.source}->${secondCoord.target}`,
+          source: firstCoord.source,
+          target: secondCoord.target,
+          color: '#fff'
+        }
+      }*/
     ]
   }
   //Refs
@@ -45,9 +57,6 @@ function App() {
 
   //States
   const [realGraph , setRealGraph] = useState(defaultGraph)
-  // const [edges, setEdges] = useState([])
-  // const [inputs, setInputs] = useState([])
-  // const [outputs, setOutputs] = useState([])
   const [board, setBoard] = useState([])
   
   const [firstCoord, setFirstCoord] = useState({x: -1, y: -1, source: ''})
@@ -88,9 +97,12 @@ function App() {
         rG.edges = [...newEdges]
         setRealGraph(rG)
       } else { //activate node
-        const targetInput = oldInputNodes.filter(i => i.attributes.cNode === dotIndex)[0];
+        const targetInput = oldInputNodes.filter(i => i.key === `input_n${dotIndex}`)[0];
+        console.log(targetInput)
         targetInput.attributes.activated = !targetInput.attributes.activated
-        const newInputs = oldInputNodes.filter(i => i.attributes.cNode !== dotIndex);
+        const newInputs = oldInputNodes.filter(i => i.key !== `input_n${dotIndex}`);
+
+        //This should create a path of all the nodes and edges connected to input and activate them
 
         // const oldLines = [...edges];
         // const targetLine = oldLines.filter(line => line.source === `input_n${dotIndex}`)
