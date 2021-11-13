@@ -45,9 +45,9 @@ function App() {
 
   //States
   const [realGraph , setRealGraph] = useState(defaultGraph)
-  const [edges, setEdges] = useState([])
+  // const [edges, setEdges] = useState([])
   // const [inputs, setInputs] = useState([])
-  const [outputs, setOutputs] = useState([])
+  // const [outputs, setOutputs] = useState([])
   const [board, setBoard] = useState([])
   
   const [firstCoord, setFirstCoord] = useState({x: -1, y: -1, source: ''})
@@ -166,60 +166,91 @@ function App() {
     }
   }
   function customBoardFn (e) { //Removes component from board
-    if(e.target.className === 'board_item'){
-      const boardItemID = e.target.attributes.board_item_id.value;
+    // if(e.target.className === 'board_item'){
+    //   const boardItemID = e.target.attributes.board_item_id.value;
       
-      if (e.ctrlKey) {
-        const newBoard = [...board];
-        // eslint-disable-next-line no-unused-vars
-        const removeIndexItem = newBoard.splice(boardItemID, 1);
+    //   if (e.ctrlKey) {
+    //     const newBoard = [...board];
+    //     // eslint-disable-next-line no-unused-vars
+    //     const removeIndexItem = newBoard.splice(boardItemID, 1);
         
-        //should find all the nodes of the item, and remove all the edges attach to them
-        const itemIdentifier = e.target.attributes.board_item_identifier.value;
-        const itemInputs = e.target.attributes.ninputs.value;
-        const itemOutputs = e.target.attributes.noutputs.value;
+    //     //should find all the nodes of the item, and remove all the edges attach to them
+    //     const itemIdentifier = e.target.attributes.board_item_identifier.value;
+    //     const itemInputs = e.target.attributes.ninputs.value;
+    //     const itemOutputs = e.target.attributes.noutputs.value;
 
-        // Removing from graph and removing from lines
-        const rG = {...realGraph}
-        let oldNodes = [...rG.nodes];
-        let oldEdges = [...rG.edges]
-        let oldLines = [...edges];
+    //     // Removing from graph and removing from lines
+    //     const rG = {...realGraph}
+    //     let oldNodes = [...rG.nodes];
+    //     let oldEdges = [...rG.edges]
+    //     let oldLines = [...edges];
 
-        for (let i = 0; i < itemInputs; i++) {
-          const identifier = `nodeComponent_${itemIdentifier}_I_${i}`;
+    //     for (let i = 0; i < itemInputs; i++) {
+    //       const identifier = `nodeComponent_${itemIdentifier}_I_${i}`;
 
-          // Remove lines from lines state
-          const midLines = oldLines.filter(line => line.source !== identifier && line.target !== identifier);
-          oldLines = [...midLines]
-          //Remove Edges from rGEdges
-          const midEdges = oldEdges.filter(edge => edge.source !== identifier && edge.target !== identifier);
-          oldEdges = [...midEdges]
-          //Remove Nodes from rGNodes
-          const midNodes = oldNodes.filter(node => node.key !== identifier)
-          oldNodes = [...midNodes];
+    //       // Remove lines from lines state
+    //       const midLines = oldLines.filter(line => line.source !== identifier && line.target !== identifier);
+    //       oldLines = [...midLines]
+    //       //Remove Edges from rGEdges
+    //       const midEdges = oldEdges.filter(edge => edge.source !== identifier && edge.target !== identifier);
+    //       oldEdges = [...midEdges]
+    //       //Remove Nodes from rGNodes
+    //       const midNodes = oldNodes.filter(node => node.key !== identifier)
+    //       oldNodes = [...midNodes];
+    //     }
+
+    //     for (let i = 0; i < itemOutputs; i++) {
+    //       const identifier = `nodeComponent_${itemIdentifier}_O_${i}`;
+
+    //       // Remove lines from lines state
+    //       const midLines = oldLines.filter(line => line.source !== identifier && line.target !== identifier);
+    //       oldLines = [...midLines];
+    //       //Remove Edges from rGEdges
+    //       const midEdges = oldEdges.filter(edge => edge.source !== identifier && edge.target !== identifier);
+    //       oldEdges = [...midEdges]
+    //       //Remove Nodes from rGNodes
+    //       const midNodes = oldNodes.filter(node => node.key !== identifier)
+    //       oldNodes = [...midNodes];
+    //     }
+
+    //     rG.nodes = [...oldNodes];
+    //     rG.edges = [...oldEdges];
+
+    //     setRealGraph(rG)
+    //     setEdges([...oldLines]);
+    //     setBoard(newBoard)
+    //   }
+    // }
+  }
+  function edgeCreator(e) { //Creates an edge in state and graph
+    // I know the offSet is x:30 y:166 cause the board offSet but I should be able to get it anyway
+    const boardOffset = {x: 30, y: 166}
+    const identifier = e.target.attributes.identifier.value;
+
+    if (firstCoord.x < 0 && firstCoord.y < 0) {
+      setFirstCoord({x:e.clientX - boardOffset.x , y:e.clientY - boardOffset.y, source: identifier});
+    } else {
+      const secondCoord = {x:e.clientX - boardOffset.x, y:e.clientY - boardOffset.y, target: identifier}
+      const edge = {
+        key: `${firstCoord.source}->${secondCoord.target}`,
+        source: firstCoord.source,
+        target: secondCoord.target,
+        attributes: {
+          x1 : firstCoord.x,
+          x2 : secondCoord.x,
+          y1 : firstCoord.y,
+          y2 : secondCoord.y,
+          key: `${firstCoord.source}->${secondCoord.target}`,
+          source: firstCoord.source,
+          target: secondCoord.target,
+          color: '#fff'
         }
-
-        for (let i = 0; i < itemOutputs; i++) {
-          const identifier = `nodeComponent_${itemIdentifier}_O_${i}`;
-
-          // Remove lines from lines state
-          const midLines = oldLines.filter(line => line.source !== identifier && line.target !== identifier);
-          oldLines = [...midLines];
-          //Remove Edges from rGEdges
-          const midEdges = oldEdges.filter(edge => edge.source !== identifier && edge.target !== identifier);
-          oldEdges = [...midEdges]
-          //Remove Nodes from rGNodes
-          const midNodes = oldNodes.filter(node => node.key !== identifier)
-          oldNodes = [...midNodes];
-        }
-
-        rG.nodes = [...oldNodes];
-        rG.edges = [...oldEdges];
-
-        setRealGraph(rG)
-        setEdges([...oldLines]);
-        setBoard(newBoard)
       }
+      const rG = {...realGraph};
+      rG.edges.push(edge);
+
+      setFirstCoord({x: -1, y: -1, source: ''})
+      setRealGraph(rG)
     }
   }
   function customSelectorFn (e) { //Removes component from selector
@@ -266,7 +297,7 @@ function App() {
       const rG = {...realGraph}
       const rGNodes = [...rG.nodes]
       const inputs = rGNodes.filter(node => node.key.split('_').includes('input'))
-
+      const outputs = rGNodes.filter(node => node.key.split('_').includes('output'))
 
       const newComponent = {
         name: componentName, 
@@ -278,9 +309,6 @@ function App() {
 
       setComponentList([...componentList, newComponent])
       setComponentName('')
-      // setInputs([])
-      setOutputs([])
-      setEdges([])
       setBoard([])
       setRealGraph(defaultGraph)
     }
@@ -342,39 +370,6 @@ function App() {
     dragItem.current = null;
     dropZone.current = null;
   }
-  function edgeCreator(e) { //Creates an edge in state and graph
-    // I know the offSet is x:30 y:166 cause the board offSet but I should be able to get it anyway
-    const boardOffset = {x: 30, y: 166}
-    const identifier = e.target.attributes.identifier.value;
-
-    if (firstCoord.x < 0 && firstCoord.y < 0) {
-      setFirstCoord({x:e.clientX - boardOffset.x , y:e.clientY - boardOffset.y, source: identifier});
-    } else {
-      const secondCoord = {x:e.clientX - boardOffset.x, y:e.clientY - boardOffset.y, target: identifier}
-      const newLine = {
-        x1 : firstCoord.x,
-        x2 : secondCoord.x,
-        y1 : firstCoord.y,
-        y2 : secondCoord.y,
-        key: `${firstCoord.source}->${secondCoord.target}`,
-        source: firstCoord.source,
-        target: secondCoord.target,
-        color: '#fff'
-      }
-
-      const edge = {
-        key: `${firstCoord.source}->${secondCoord.target}`,
-        source: firstCoord.source,
-        target: secondCoord.target,
-      }
-      const rG = {...realGraph};
-      rG.edges.push(edge);
-
-      setEdges([...edges, newLine])
-      setFirstCoord({x: -1, y: -1, source: ''})
-      setRealGraph(rG)
-    }
-  }
 
 
   //Massive object to pass props
@@ -382,7 +377,7 @@ function App() {
     realGraph, edgeCreator, //common for lc_inputs lc_outputs lc_board
     customInputFn, //lc_inputs component props ... inputs
     customOutputFn, //lc_outputs component props
-    board, edges, customBoardFn, handleDragEnter, handleDragEnd,//lc_board component props
+    board, customBoardFn, handleDragEnter, handleDragEnd,//lc_board component props
     componentName, handleTextInput, handleSubmitInput, //lc_form component props
     componentList, customSelectorFn, handleDragStart, //lc_selector component props
   }

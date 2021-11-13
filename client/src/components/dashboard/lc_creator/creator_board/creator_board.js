@@ -6,7 +6,9 @@ import globalContext from '../../../../services/globalContext'
 function CreatorBoard () {
 
   const {magicProps} = useContext(globalContext);
-  const {board, edges, customBoardFn, handleDragEnter, handleDragEnd, edgeCreator} = magicProps;
+  const {board, realGraph, customBoardFn, handleDragEnter, handleDragEnd, edgeCreator} = magicProps;
+
+  const edges = [...realGraph.edges]
 
   return (
     <div id="creator_board" className="creator_board" onDragEnter={(e)=>{handleDragEnter(e)}} onDragEnd={(e)=>{handleDragEnd(e)}}>
@@ -67,9 +69,9 @@ function CreatorBoard () {
         {edges.map((line,i) => {
           return (
             <line key={i} 
-              x1={line.x1} y1={line.y1} x2={line.x2} y2={line.y2}
-              identifier = {line.key}
-              style={{stroke: line.color, strokeWidth: 1.5}}
+              x1={line.attributes.x1} y1={line.attributes.y1} x2={line.attributes.x2} y2={line.attributes.y2}
+              identifier = {line.attributes.key}
+              style={{stroke: line.attributes.color, strokeWidth: 1.5}}
             />
           )
         })}
