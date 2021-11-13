@@ -3,7 +3,7 @@ import React, {useContext}from 'react'
 
 import globalContext from '../../../../services/globalContext'
 
-function CreatorBoard (props) {
+function CreatorBoard () {
 
   const {magicProps} = useContext(globalContext);
   const {board, edges, customBoardFn, handleDragEnter, handleDragEnd, edgeCreator} = magicProps;

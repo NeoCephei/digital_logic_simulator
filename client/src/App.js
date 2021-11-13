@@ -29,14 +29,13 @@ function App() {
     },
     nodes: [
       // {key: 'n0'}, {key: 'input_n0 || output_n0'} for inputs and outputs
-      // {key: 'n1'}
+      // {key: 'n1'}, {key: 'nodeComponent_name_number_I||O_number'} --> nodeComponent_And_0_I_1
     ],
     edges: [
       // {
       //   key: 'n0->n1',
       //   source: 'n0',
       //   target: 'n1',
-      //   attributes: {type: 'KNOWS'}
       // }
     ]
   }
@@ -47,11 +46,12 @@ function App() {
   //States
   const [realGraph , setRealGraph] = useState(defaultGraph)
   const [edges, setEdges] = useState([])
-  const [firstCoord, setFirstCoord] = useState({x: -1, y: -1, source: ''})
-  const [componentName, setComponentName] = useState('');
-  const [inputs, setInputs] = useState([])
+  // const [inputs, setInputs] = useState([])
   const [outputs, setOutputs] = useState([])
   const [board, setBoard] = useState([])
+  
+  const [firstCoord, setFirstCoord] = useState({x: -1, y: -1, source: ''})
+  const [componentName, setComponentName] = useState('');
   const [componentList, setComponentList] = useState([
     {
       name: 'And',
@@ -70,62 +70,78 @@ function App() {
   ])
 
   //Functional functions
+  // if (e.target.classList.contains('input_circle')) { //Have to activate or remove node
+  //   if (e.ctrlKey) { //remove node
+
+  //   } else { //activate node
+
+  //   }
+  // } else if (e.target.classList.contains('small_dot')) { //Prevent default and overlapping
+
+  // } else { //Create input node
+
+  // }
+
 
   //Injected functions
   function customInputFn (e) { //Create input circle and node in graph
-    if (e.target.classList.contains('input_circle')) {
-      const dotIndex = e.target.attributes.key_num.value*1;
+    if (e.target.classList.contains('input_circle')) { //Have to activate or remove node
+      const dotIndex = Number(e.target.attributes.key_num.value);
+      const rG = {...realGraph}
+      const oldInputNodes = [...rG.nodes];
+
       if (e.ctrlKey) { //remove node
-        const oldInputs = [...inputs];
-        const newInputs = oldInputs.filter(i => i.cNode !== dotIndex);
-        // remove node and edge from graph
-        const rG = {...realGraph}
-        const oldInputNodes = [...rG.nodes];
+        // remove node graph
         const newNodes = oldInputNodes.filter(node => node.key !== `input_n${dotIndex}`)
         rG.nodes = [...newNodes];
-        const oldEdges = [...rG.edges]
-        const newEdges = oldEdges.filter(edge => edge.source !== `input_n${dotIndex}` && edge.target !== `input_n${dotIndex}`)
-        rG.edges = [...newEdges]
-        //should remove edges from state
-        const oldLines = [...edges];
-        const newLines = oldLines.filter(line => line.source !== `input_n${dotIndex}` && line.target !== `input_n${dotIndex}`)
-
-        setEdges([...newLines]);
-        setInputs(newInputs);
+        // remove edge from graph
+        // const oldEdges = [...rG.edges]
+        // const newEdges = oldEdges.filter(edge => edge.source !== `input_n${dotIndex}` && edge.target !== `input_n${dotIndex}`)
+        // rG.edges = [...newEdges]
         setRealGraph(rG)
-      } else {
-        const oldInputs = [...inputs];
-        const targetInput = oldInputs.filter(i => i.cNode === dotIndex)[0];
-        targetInput.activated = !targetInput.activated
-        const newInputs = oldInputs.filter(i => i.cNode !== dotIndex);
+      } else { //activate node
+        const targetInput = oldInputNodes.filter(i => i.attributes.cNode === dotIndex)[0];
+        targetInput.attributes.activated = !targetInput.attributes.activated
+        const newInputs = oldInputNodes.filter(i => i.attributes.cNode !== dotIndex);
 
-        const oldLines = [...edges];
-        const targetLine = oldLines.filter(line => line.source === `input_n${dotIndex}` || line.target === `input_n${dotIndex}`)
+        // const oldLines = [...edges];
+        // const targetLine = oldLines.filter(line => line.source === `input_n${dotIndex}`)
+        // const targetLine = oldLines.filter(line => line.source === `input_n${dotIndex}` || line.target === `input_n${dotIndex}`)
         
-        for (let i = 0; i < targetLine.length; i++) {
-          if (targetLine[i].color === '#fff') targetLine[i].color = '#ec2239'
-          else targetLine[i].color = '#fff'
-        }
+        // for (let i = 0; i < targetLine.length; i++) {
+        //   if (targetLine[i].color === '#fff') targetLine[i].color = '#ec2239'
+        //   else targetLine[i].color = '#fff'
+        // }
 
-        const newLines = oldLines.filter(line => line.source !== `input_n${dotIndex}` && line.target !== `input_n${dotIndex}`)
+        // const newLines = oldLines.filter(line => line.source !== `input_n${dotIndex}`)
+        // const newLines = oldLines.filter(line => line.source !== `input_n${dotIndex}` && line.target !== `input_n${dotIndex}`)
 
-        setEdges([...newLines, ...targetLine])
-        setInputs([...newInputs, targetInput]);
+        // setEdges([...newLines, ...targetLine])
+
+        rG.nodes = [...newInputs, targetInput];
+        setRealGraph(rG)
       }
-    } else if (e.target.classList.contains('small_dot')) {
+    } else if (e.target.classList.contains('small_dot')) { //Prevent default and overlapping
       // I COULD TRY TO DO STH HERE
-    } else {
+    } else { //Create input node
       //add node to graph
       const rG = {...realGraph}
       const keyNum = rG.attributes.n_input_Nodes
-      const newNode = {key: `input_n${keyNum}`};
-      rG.attributes.n_input_Nodes++;
-      rG.nodes.push(newNode);
       //Position of mouse - parentDiv offsetTop - circle.height/2
       const relativeTop = e.clientY - e.target.offsetTop - 10;
-      const newDot = {cNode: keyNum, top: relativeTop, left: '-10px', activated: false}
+      const newNode = {
+        key: `input_n${keyNum}`,
+        attributes: {
+          cNode: keyNum, 
+          top: relativeTop, 
+          left: '-10px', 
+          activated: false
+        }
+      };
+      rG.attributes.n_input_Nodes++;
+      rG.nodes.push(newNode);
+
       setRealGraph(rG)
-      setInputs([...inputs, newDot]);
     }
   }
   function customOutputFn (e) { //Create output circle and node in graph
@@ -263,6 +279,11 @@ function App() {
         '#277DA1'
       ]
 
+      const rG = {...realGraph}
+      const rGNodes = [...rG.nodes]
+      const inputs = rGNodes.filter(node => node.key.split('_').includes('input'))
+
+
       const newComponent = {
         name: componentName, 
         nInputs: inputs.length,
@@ -273,7 +294,7 @@ function App() {
 
       setComponentList([...componentList, newComponent])
       setComponentName('')
-      setInputs([])
+      // setInputs([])
       setOutputs([])
       setEdges([])
       setBoard([])
@@ -303,6 +324,7 @@ function App() {
     const name = a.target.innerText;
     const counter = tmpBoard.filter(n => n.name === name);
 
+    //node to board
     const node = {
       name: name,
       nComponent: counter.length,
@@ -329,8 +351,8 @@ function App() {
     const rGNodes = [...rG.nodes];
     rG.nodes = [...rGNodes, ...componentNodes];
 
-    setRealGraph(rG)
     setBoard([...board,node])
+    setRealGraph(rG)
 
     dragItem.current.target.removeEventListener('dragend', handleDragEnd);
     dragItem.current = null;
@@ -373,8 +395,8 @@ function App() {
 
   //Massive object to pass props
   const magicProps = {
-    edgeCreator, //common for lc_inputs lc_outputs lc_board
-    inputs, customInputFn, //lc_inputs component props
+    realGraph, edgeCreator, //common for lc_inputs lc_outputs lc_board
+    customInputFn, //lc_inputs component props ... inputs
     outputs, customOutputFn, //lc_outputs component props
     board, edges, customBoardFn, handleDragEnter, handleDragEnd,//lc_board component props
     componentName, handleTextInput, handleSubmitInput, //lc_form component props

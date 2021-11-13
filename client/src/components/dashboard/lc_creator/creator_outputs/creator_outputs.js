@@ -3,7 +3,7 @@ import React, {useContext} from 'react'
 
 import globalContext from '../../../../services/globalContext'
 
-function CreatorOutputs (props) {
+function CreatorOutputs () {
 
   const {magicProps} = useContext(globalContext)
   const {outputs, customOutputFn, edgeCreator} = magicProps
