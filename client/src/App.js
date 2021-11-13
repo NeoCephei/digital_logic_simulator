@@ -70,21 +70,9 @@ function App() {
   ])
 
   //Functional functions
-  // if (e.target.classList.contains('input_circle')) { //Have to activate or remove node
-  //   if (e.ctrlKey) { //remove node
-
-  //   } else { //activate node
-
-  //   }
-  // } else if (e.target.classList.contains('small_dot')) { //Prevent default and overlapping
-
-  // } else { //Create input node
-
-  // }
-
 
   //Injected functions
-  function customInputFn (e) { //Create input circle and node in graph
+  function customInputFn (e) { //Create input node in graph
     if (e.target.classList.contains('input_circle')) { //Have to activate or remove node
       const dotIndex = Number(e.target.attributes.key_num.value);
       const rG = {...realGraph}
@@ -95,9 +83,9 @@ function App() {
         const newNodes = oldInputNodes.filter(node => node.key !== `input_n${dotIndex}`)
         rG.nodes = [...newNodes];
         // remove edge from graph
-        // const oldEdges = [...rG.edges]
-        // const newEdges = oldEdges.filter(edge => edge.source !== `input_n${dotIndex}` && edge.target !== `input_n${dotIndex}`)
-        // rG.edges = [...newEdges]
+        const oldEdges = [...rG.edges]
+        const newEdges = oldEdges.filter(edge => edge.source !== `input_n${dotIndex}` && edge.target !== `input_n${dotIndex}`)
+        rG.edges = [...newEdges]
         setRealGraph(rG)
       } else { //activate node
         const targetInput = oldInputNodes.filter(i => i.attributes.cNode === dotIndex)[0];
@@ -144,41 +132,37 @@ function App() {
       setRealGraph(rG)
     }
   }
-  function customOutputFn (e) { //Create output circle and node in graph
-    if (e.target.classList.contains('output_circle')) {
-      const dotIndex = e.target.attributes.key_num.value*1;
-      const oldOutputs = [...outputs];
-      const newOutputs = oldOutputs.filter(i => i.cNode !== dotIndex);
-      // remove node and edge from graph
+  function customOutputFn (e) { //Create output node in graph
+    if (e.target.classList.contains('output_circle')) { //Have to remove node
+      const dotIndex = Number(e.target.attributes.key_num.value);
       const rG = {...realGraph}
+      // remove node from graph
       const oldOutputNodes = [...rG.nodes];
       const newNodes = oldOutputNodes.filter(node => node.key !== `output_n${dotIndex}`)
       rG.nodes = [...newNodes];
+      // remove edge from graph
       const oldEdges = [...rG.edges]
       const newEdges = oldEdges.filter(edge => edge.source !== `output_n${dotIndex}` && edge.target !== `output_n${dotIndex}`)
       rG.edges = [...newEdges]
-      //should remove edges from state
-      const oldLines = [...edges];
-      const newLines = oldLines.filter(line => line.source !== `output_n${dotIndex}` && line.target !== `output_n${dotIndex}`)
-
-      setEdges([...newLines]);
       setRealGraph(rG)
-      setOutputs(newOutputs);
-    } else if (e.target.classList.contains('small_output_dot')) {
+    } else if (e.target.classList.contains('small_output_dot')) { //Prevent default and overlapping
       // I COULD TRY TO DO STH HERE
-    } else {
+    } else { //Create input node
       //add node to graph
       const rG = {...realGraph}
       const keyNum = rG.attributes.n_output_Nodes;
-      const newNode = {key: `output_n${keyNum}`}
+      const relativeTop = e.clientY - e.target.offsetTop - 10; //Position of mouse - parentDiv offsetTop - circle.height/2
+      const newNode = {
+        key: `output_n${keyNum}`,
+        attributes: {
+          cNode: keyNum, 
+          top: relativeTop, 
+          right: '-10px', 
+          activated: false}
+      }
       rG.attributes.n_output_Nodes++;
       rG.nodes.push(newNode);
-
-      //Position of mouse - parentDiv offsetTop - circle.height/2
-      const relativeTop = e.clientY - e.target.offsetTop - 10;
-      const newDot = {cNode: keyNum, top: relativeTop, right: '-10px', activated: false}
       setRealGraph(rG)
-      setOutputs([...outputs, newDot]);
     }
   }
   function customBoardFn (e) { //Removes component from board
@@ -397,7 +381,7 @@ function App() {
   const magicProps = {
     realGraph, edgeCreator, //common for lc_inputs lc_outputs lc_board
     customInputFn, //lc_inputs component props ... inputs
-    outputs, customOutputFn, //lc_outputs component props
+    customOutputFn, //lc_outputs component props
     board, edges, customBoardFn, handleDragEnter, handleDragEnd,//lc_board component props
     componentName, handleTextInput, handleSubmitInput, //lc_form component props
     componentList, customSelectorFn, handleDragStart, //lc_selector component props
