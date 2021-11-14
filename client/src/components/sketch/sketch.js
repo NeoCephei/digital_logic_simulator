@@ -18,7 +18,6 @@ export default function Sketch(props) {
     "Not": { name: "Not", inputs: 1, outputs: 1, exec: x => [!x[0]] }
   };
   const circuits = {};
-  const conceptsArr = ["And", "Not"];
   const buttons = [];
   let create;
   let chipName = "Nand";
@@ -88,7 +87,7 @@ export default function Sketch(props) {
       }
     }
 
-    class DragButton { //Needs chips class
+    class DragButton {
       constructor(x, y, name, chipConcept) {
         this.x = x;
         this.y = y;
@@ -132,7 +131,7 @@ export default function Sketch(props) {
       }
     }
 
-    class Chip { //Needs pin class
+    class Chip {
       constructor(x, y, concept) {
         this.x = x;
         this.y = y;
@@ -266,16 +265,16 @@ export default function Sketch(props) {
         this.nodeR = 15;
         this.pin   = new Pin(inp ? 80 : p.width-80, pinY, this);
         this.name  = name;
-        this.state = false;
+        this.bool = false;
       }
       
       execute() {
-        this.state = this.pin.state;
+        this.bool = this.pin.state;
       }
       
       toggle() {
-        this.state = !this.state;
-        this.pin.state = this.state;
+        this.bool = !this.bool;
+        this.pin.state = this.bool;
         this.pin.propagate();
       }
       
@@ -288,7 +287,7 @@ export default function Sketch(props) {
         p.strokeWeight(2);
         p.line(this.nodeX, this.nodeY, this.pin.x, this.pin.y);
         p.noStroke();
-        if (this.state) {
+        if (this.bool) {
           p.fill(340, 80, 100);
         } else {
           p.fill(0, 0, 35);

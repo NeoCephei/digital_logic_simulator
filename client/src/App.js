@@ -6,7 +6,7 @@ import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom";
 import GlobalContext from './services/globalContext'
 
 import Home from "./components/home"
-import Index from "./components/canvas/index"
+import Index from "./components/sketch/index"
 
 function App() {
 
