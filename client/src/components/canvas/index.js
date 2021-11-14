@@ -1,11 +1,9 @@
 import React from 'react'
+import Sketch from './sketch'
+import useWindowDimensions from '../../hooks/useWindowDimensions';
 
-import Canvas from './canvas'
+export default function Index() {
+  const { height, width } = useWindowDimensions();
 
-export default function index() {
-  return (
-    <div>
-      <Canvas/>
-    </div>
-  )
+  return <Sketch windowWidth = {width} windowHeight = {height}/>
 }
