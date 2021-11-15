@@ -19,7 +19,6 @@ export default function Sketch(props) {
     "Not": { name: "Not", inputs: 1, outputs: 1, exec: x => [!x[0]] }
   };
   const circuits = {};
-  // const conceptsArr = ["And", "Not"];
   const buttons = [];
   let create;
   let chipName = "Nand";
@@ -390,7 +389,7 @@ export default function Sketch(props) {
         return;
       }
       if (p.key === "t") {
-        console.log('tester letter: ')
+        console.log('tester letter: ',circuits, concepts)
       }
       if (p.key === "w" && insideContainer(p.mouseX, p.mouseY)) {
         waypoints.push(p.createVector(p.mouseX, p.mouseY));

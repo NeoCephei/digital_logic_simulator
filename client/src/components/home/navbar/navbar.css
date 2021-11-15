@@ -1,0 +1,46 @@
+.not_working{
+  text-decoration: line-through;
+}
+
+.navbar{
+  height: 72px;
+  width: 100%;
+  box-shadow: 0px 5px 10px -10px #ffffff;
+  line-height: 72px;
+
+  display:flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+.navbar > h1 {
+  margin-left: 30px;
+}
+.navbar > a {
+  text-decoration: none;
+}
+
+.navbar-pages{
+  display: flex;
+  width: 20%;
+  flex-direction: row;
+  justify-content: space-around;
+
+  color: #ffffff;
+}
+.navbar-pages > p:hover{
+  cursor: pointer;
+  color: #232323;
+}
+
+#try_me{
+  color:#ffffff;
+  text-decoration: none;
+}
+#try_me:hover{
+  cursor: pointer;
+  color: #232323;
+}
+#try_me:focus-visible {
+  text-decoration: none;
+  outline: none;
+}
