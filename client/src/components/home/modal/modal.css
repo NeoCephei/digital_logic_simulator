@@ -1,6 +1,48 @@
 .modal{
-  width: 200px;
+  display: flex;
+  flex-direction: column;
+  align-content: center;
+  justify-content: center;
+  width: 100%;
   height: 100%;
+}
+.modal_wrapper{
+  width: 50%;
+  height: 50%;
   margin: auto;
   border: 1px solid #fff;
+  border-radius: 10px;
+  
+  display: flex;
+  flex-direction: column;
+}
+
+.modal_close{
+  align-self: flex-end;
+  padding: 10px;
+  font-size: 30px;
+}
+.modal_close:hover{
+  cursor: pointer;
+}
+
+.modal_selector{
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+  margin: 10px 0;
+}
+
+.modal_option:hover{
+  cursor: pointer;
+  text-decoration:underline;
+}
+
+.modal_description{
+  border: 1px solid #fff;
+  border-radius: 10px;
+  margin: 20px;
+  padding: 10px;
+  text-align: center;
+  font-size: 40px;
 }
