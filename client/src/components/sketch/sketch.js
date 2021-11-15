@@ -5,6 +5,7 @@ export default function Sketch(props) {
   // I wanted to create the Sketch component as functional component instead of class but...
   // I think I will keep going with the class as I know it works at least
   let myRef = useRef(null)
+  // eslint-disable-next-line no-unused-vars
   let myP5;
 
   const inputs = [];
@@ -29,6 +30,7 @@ export default function Sketch(props) {
   const waypoints = [];
 
   useEffect(()=> {
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     myP5 = new p5(Sketch, myRef.current)
   },[])
 
@@ -142,8 +144,6 @@ export default function Sketch(props) {
       constructor(x, y, concept) {
         this.x = x;
         this.y = y;
-        this.test = concept
-        
         this.definedByCircuit = concept instanceof Circuit;
         
         this.name = concept.name.toUpperCase();
@@ -158,8 +158,8 @@ export default function Sketch(props) {
         
         p.textSize(12);
         const maxIO = p.max(this.inputs, this.outputs);
-        this.h = maxIO * 18;
-        this.w = p.textWidth(this.name) + 24;
+        this.h = maxIO * 25;
+        this.w = p.textWidth(this.name) + 34;
         
         this.inputPins = [];
         for (let i = 0; i < this.inputs; i++) {
@@ -241,7 +241,7 @@ export default function Sketch(props) {
       constructor(x, y, parent) {
         this.x = x;
         this.y = y;
-        this.r = 6;
+        this.r = 8;
         this.state = false;
         this.wires = [];
         this.parent = parent;
@@ -274,10 +274,11 @@ export default function Sketch(props) {
         this.nodeR = 15;
         this.pin   = new Pin(inp ? 80 : p.width-80, pinY, this);
         this.name  = name;
-        this.state = false; // If I change this to sth else it just brokes
+        this.state = false; // If I change this to sth else it just brokes cause concept instanceof Circuit; return false always (chipClass)
       }
       
       execute() {
+        //Cause im not modifying the real state of the component only the one of the class
         // eslint-disable-next-line react/no-direct-mutation-state
         this.state = this.pin.state;
       }
@@ -295,7 +296,7 @@ export default function Sketch(props) {
       
       render() {
         p.stroke(0, 0, 40);
-        p.strokeWeight(2);
+        p.strokeWeight(4);
         p.line(this.nodeX, this.nodeY, this.pin.x, this.pin.y);
         p.noStroke();
         if (this.state) {
