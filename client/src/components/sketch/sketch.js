@@ -18,6 +18,7 @@ export default function Sketch(props) {
     "Not": { name: "Not", inputs: 1, outputs: 1, exec: x => [!x[0]] }
   };
   const circuits = {};
+  // const conceptsArr = ["And", "Not"];
   const buttons = [];
   let create;
   let chipName = "Nand";
@@ -106,7 +107,6 @@ export default function Sketch(props) {
       }
       
       press() {
-        console.log('chipConcept: ',this.chipConcept)
         this.currentChip = new Chip(p.mouseX, p.mouseY, this.chipConcept);
       }
       
@@ -142,8 +142,10 @@ export default function Sketch(props) {
       constructor(x, y, concept) {
         this.x = x;
         this.y = y;
+        this.test = concept
         
         this.definedByCircuit = concept instanceof Circuit;
+        
         this.name = concept.name.toUpperCase();
         this.inputs = this.definedByCircuit ? concept.inputs.length : concept.inputs;
         this.outputs = this.definedByCircuit ? concept.outputs.length : concept.outputs;
@@ -272,16 +274,18 @@ export default function Sketch(props) {
         this.nodeR = 15;
         this.pin   = new Pin(inp ? 80 : p.width-80, pinY, this);
         this.name  = name;
-        this.bool = false;
+        this.state = false; // If I change this to sth else it just brokes
       }
       
       execute() {
-        this.bool = this.pin.state;
+        // eslint-disable-next-line react/no-direct-mutation-state
+        this.state = this.pin.state;
       }
       
       toggle() {
-        this.bool = !this.bool;
-        this.pin.state = this.bool;
+        // eslint-disable-next-line react/no-direct-mutation-state
+        this.state = !this.state;
+        this.pin.state = this.state;
         this.pin.propagate();
       }
       
@@ -294,7 +298,7 @@ export default function Sketch(props) {
         p.strokeWeight(2);
         p.line(this.nodeX, this.nodeY, this.pin.x, this.pin.y);
         p.noStroke();
-        if (this.bool) {
+        if (this.state) {
           p.fill('#EC2239');
         } else {
           p.fill('#20252E');
@@ -339,15 +343,19 @@ export default function Sketch(props) {
       p.colorMode(p.HSB);
       let x = 40;
       create = new Button(p.width-190, 9, "Create", () => {
-        chipName = chipNameInput.value(); // Gets input value (I have to sanitize)
-        const chipNameCap = chipName.toUpperCase()
+        chipName = chipNameInput.value().trim(); // Gets input value (I have to sanitize)
+        const chipNameCap = chipName.toUpperCase();
         const check = buttons.map(button => button.name);
-        if (chipNameCap === '' || check.includes(chipNameCap)) {
-          alert("Please insert a valid name")
+        if (chipName === '' 
+              || inputs.length === 0 
+              || outputs.length === 0
+              || check.indexOf(chipNameCap) !== -1
+            ) {
+          alert("Please insert a valid component")
         } else {
           chipNameInput.value(''); // Resets input value
           const col = p.color(p.random(360), 100, 80);
-          circuits[chipName] = new Circuit(chipNameCap, col, inputs.slice(), outputs.slice(), wires.slice(), chips.slice());
+          circuits[chipName] = new Circuit(chipName, col, inputs.slice(), outputs.slice(), wires.slice(), chips.slice());
           //Reset circuit arrays
           inputs.splice(0);
           outputs.splice(0);
@@ -355,13 +363,14 @@ export default function Sketch(props) {
           wires.splice(0);
           chips.splice(0);
 
-          const button = new DragButton(x, p.height-34, chipNameCap, circuits[chipName]);
+          const button = new DragButton(x, p.height-34, chipName, circuits[chipName]);
           buttons.push(button);
           x += button.w + 4;
         }
       });
 
       for (const name in concepts) {
+      
         const c = concepts[name];
         c.col = p.color(p.random(360), 100, 80);
         const button = new DragButton(x, p.height-34, c.name, c);
@@ -375,8 +384,12 @@ export default function Sketch(props) {
     }
 
     p.keyPressed = () => {
+      if (p.keyCode === 13) {
+        create.action();
+        return;
+      }
       if (p.key === "t") {
-        console.log('tester: ',inputs)
+        console.log('tester letter: ')
       }
       if (p.key === "w" && insideContainer(p.mouseX, p.mouseY)) {
         waypoints.push(p.createVector(p.mouseX, p.mouseY));
@@ -403,6 +416,14 @@ export default function Sketch(props) {
           return;
         }
       }
+      for (const [index,out] of outputs.entries()) {
+        if (out.nodeContains(p.mouseX, p.mouseY))  {
+          if (e.ctrlKey) {
+            outputs.splice(index, 1);
+            return;
+          }
+        }
+      }
       for (const pin of pins) {
         if (pin.contains(p.mouseX, p.mouseY)) {
           wiringMode = true;
@@ -411,9 +432,9 @@ export default function Sketch(props) {
         }
       }
       if (p.mouseY >= 80 && p.mouseY <= p.height-80) {
-        if (p.mouseX >= 34 && p.mouseX <= 46) {
+        if (p.mouseX >= 34 && p.mouseX <= 46) { //Input area
           inputs.push(new InOut(true, p.mouseY));
-        } else if (p.mouseX >= p.width-46 && p.mouseX <= p.width-34) {
+        } else if (p.mouseX >= p.width-46 && p.mouseX <= p.width-34) { //Output area
           outputs.push(new InOut(false, p.mouseY));
         }
       }
