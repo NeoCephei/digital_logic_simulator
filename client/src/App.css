@@ -9,3 +9,14 @@
 *:hover {
   cursor: default;
 }
+
+input {
+  background-color: transparent;
+  border: 1px solid #fff;
+  border-radius: 10px;
+  padding-left: 10px;
+  color: #fff;
+}
+input:focus{
+  outline: none;
+}

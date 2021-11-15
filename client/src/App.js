@@ -1,7 +1,7 @@
 import './App.css';
 import React from 'react';
+// eslint-disable-next-line no-unused-vars
 import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom";
-/* <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.1.9/p5.js"></script> Using p5 library in index.html */
 
 import GlobalContext from './services/globalContext'
 

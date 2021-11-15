@@ -1,10 +1,10 @@
-import React, {useEffect} from 'react'
+import React, {useEffect, useRef} from 'react'
 import p5 from 'p5'
 
 export default function Sketch(props) {
   // I wanted to create the Sketch component as functional component instead of class but...
   // I think I will keep going with the class as I know it works at least
-  let myRef = React.createRef()
+  let myRef = useRef(null)
   let myP5;
 
   const inputs = [];
@@ -65,25 +65,24 @@ export default function Sketch(props) {
         this.x = x;
         this.y = y;
         this.name = name.toUpperCase();
-        p.textSize(16);
-        this.w = p.textWidth(this.name) + 16;
-        this.h = 30;
+        this.w = (p.width - 80) - (p.width - 230); //width board - width input - gap
+        this.h = 57; // Same as chipNameInput.size(p.width-250, 57)
         this.action = action;
       }
       
-      contains(x, y) {
+      contains(x, y) { // This method checks if you're clicking inside the zone
         return x >= this.x && x <= this.x + this.w && y >= this.y && y <= this.y + this.h;
       }
       
       render() {
         p.textAlign(p.LEFT, p.TOP);
-        p.textSize(16);
+        p.textSize(30);
         p.noStroke();
-        p.fill(0, 0, 30);
+        p.fill('#444444');
         p.rectMode(p.CORNER);
         p.rect(this.x, this.y, this.w, this.h);
-        p.fill(0, 0, 100);
-        p.text(this.name, this.x+8, this.y+8);
+        p.fill('#fff');
+        p.text(this.name, this.x+15, this.y+15);
       }
     }
 
@@ -99,7 +98,7 @@ export default function Sketch(props) {
         this.chipConcept = chipConcept;
       }
       
-      contains(x, y) {
+      contains(x, y) { // This method checks if you're clicking inside the zone
         return x >= this.x && x <= this.x + this.w && y >= this.y && y <= this.y + this.h;
       }
       
@@ -288,9 +287,9 @@ export default function Sketch(props) {
         p.line(this.nodeX, this.nodeY, this.pin.x, this.pin.y);
         p.noStroke();
         if (this.bool) {
-          p.fill(340, 80, 100);
+          p.fill('#EC2239');
         } else {
-          p.fill(0, 0, 35);
+          p.fill('#20252E');
         }
         p.circle(this.nodeX, this.nodeY, this.nodeR*2);
         this.pin.render();
@@ -310,11 +309,11 @@ export default function Sketch(props) {
     
       render() {
         if (this.a.state) {
-          p.stroke(340, 80, 100);
+          p.stroke('#EC2239');
         } else {
-          p.stroke(0, 0, 35);
+          p.stroke('#20252E');
         }
-        p.strokeWeight(2);
+        p.strokeWeight(6);
         p.noFill();
         p.beginShape();
         p.vertex(this.a.x, this.a.y);
@@ -330,21 +329,30 @@ export default function Sketch(props) {
       //Everyhting that normally happens in setup works
       p.createCanvas(props.windowWidth, props.windowHeight);
       p.colorMode(p.HSB);
-      let x = 8;
-      create = new Button(x, p.height-34, "Create", () => {
-        chipName = chipNameInput.value();
-        const col = p.color(p.random(360), 100, 80);
-        circuits[chipName] = new Circuit(chipName, col, inputs.slice(), outputs.slice(), wires.slice(), chips.slice());
-        inputs.splice(0);
-        outputs.splice(0);
-        pins.splice(0);
-        wires.splice(0);
-        chips.splice(0);
-        const button = new DragButton(x, p.height-34, chipName, circuits[chipName]);
-        buttons.push(button);
-        x += button.w + 4;
+      let x = 40;
+      create = new Button(p.width-190, 9, "Create", () => {
+        chipName = chipNameInput.value(); // Gets input value (I have to sanitize)
+        const chipNameCap = chipName.toUpperCase()
+        const check = buttons.map(button => button.name);
+        if (chipNameCap === '' || check.includes(chipNameCap)) {
+          alert("Please insert a valid name")
+        } else {
+          chipNameInput.value(''); // Resets input value
+          const col = p.color(p.random(360), 100, 80);
+          circuits[chipName] = new Circuit(chipNameCap, col, inputs.slice(), outputs.slice(), wires.slice(), chips.slice());
+          //Reset circuit arrays
+          inputs.splice(0);
+          outputs.splice(0);
+          pins.splice(0);
+          wires.splice(0);
+          chips.splice(0);
+          
+          const button = new DragButton(x, p.height-34, chipNameCap, circuits[chipName]);
+          buttons.push(button);
+          x += button.w + 4;
+        }
       });
-      x += create.w + 4;
+      // x += create.w + 4;
       for (const name in concepts) {
         const c = concepts[name];
         c.col = p.color(p.random(360), 100, 80);
@@ -354,6 +362,7 @@ export default function Sketch(props) {
       }
       chipNameInput = p.createInput();
       chipNameInput.style("font-size", "48px");
+      chipNameInput.size(p.width-250, 57)
       chipNameInput.position(40, 9);
     }
 
@@ -421,22 +430,22 @@ export default function Sketch(props) {
     }
 
     p.draw = () => {
-      p.background(0, 0, 40);
+      p.background('#363636');
       p.rectMode(p.CORNER);
       p.noStroke();
-      p.fill(0, 0, 35);
+      p.fill('#232323');
       p.rect(0, p.height-40, p.width, 40);
       p.stroke(0, 0, 50);
       p.strokeWeight(1);
-      p.fill(0, 0, 45);
-      p.rect(40, 80, p.width-80, p.height-160);
+      p.fill('#323232');
+      p.rect(40, 80, p.width-80, p.height-160); //AQUI!!!!!!
     
       for (const wire of wires) {
         wire.render();
       }
       if (wiringMode) {
-        p.stroke(0, 0, 35);
-        p.strokeWeight(2);
+        p.stroke('#20252E');
+        p.strokeWeight(6);
         p.noFill();
         p.beginShape();
         p.vertex(wireA.x, wireA.y);
