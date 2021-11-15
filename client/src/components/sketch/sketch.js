@@ -33,6 +33,9 @@ export default function Sketch(props) {
 
   const Sketch = (p) => {
 
+    const insideContainer = (x,y) => {
+      return x >= 40 && x <= p.width-40 && y >= 80 && y <= p.height-80
+    }
     class Circuit {
       constructor(name, col, inputs=[], outputs=[], wires=[], chips=[]) {
         this.name = name;
@@ -103,6 +106,7 @@ export default function Sketch(props) {
       }
       
       press() {
+        console.log('chipConcept: ',this.chipConcept)
         this.currentChip = new Chip(p.mouseX, p.mouseY, this.chipConcept);
       }
       
@@ -110,9 +114,13 @@ export default function Sketch(props) {
         this.currentChip.move(p.mouseX, p.mouseY);
       }
       
-      release() {
-        chips.push(this.currentChip);
-        this.currentChip = null;
+      release() { //only push if is in container
+        if(insideContainer(p.mouseX, p.mouseY)) {
+          chips.push(this.currentChip);
+          this.currentChip = null;
+        } else {
+          this.currentChip = null;
+        }
       }
       
       render() {
@@ -326,7 +334,7 @@ export default function Sketch(props) {
     }
 
     p.setup = () => {
-      //Everyhting that normally happens in setup works
+      //Everything that normally happens in setup works
       p.createCanvas(props.windowWidth, props.windowHeight);
       p.colorMode(p.HSB);
       let x = 40;
@@ -346,13 +354,13 @@ export default function Sketch(props) {
           pins.splice(0);
           wires.splice(0);
           chips.splice(0);
-          
+
           const button = new DragButton(x, p.height-34, chipNameCap, circuits[chipName]);
           buttons.push(button);
           x += button.w + 4;
         }
       });
-      // x += create.w + 4;
+
       for (const name in concepts) {
         const c = concepts[name];
         c.col = p.color(p.random(360), 100, 80);
@@ -367,11 +375,14 @@ export default function Sketch(props) {
     }
 
     p.keyPressed = () => {
-      if (p.key === "w") {
+      if (p.key === "t") {
+        console.log('tester: ',inputs)
+      }
+      if (p.key === "w" && insideContainer(p.mouseX, p.mouseY)) {
         waypoints.push(p.createVector(p.mouseX, p.mouseY));
       }
     }
-    p.mousePressed = () => {
+    p.mousePressed = (e) => {
       if (create.contains(p.mouseX, p.mouseY)) {
         create.action();
         return;
@@ -382,9 +393,13 @@ export default function Sketch(props) {
           return;
         }
       }
-      for (const inp of inputs) {
+      for (const [index,inp] of inputs.entries()) {
         if (inp.nodeContains(p.mouseX, p.mouseY))  {
-          inp.toggle();
+          if (e.ctrlKey) {
+            inputs.splice(index, 1);
+          } else {
+            inp.toggle();
+          }
           return;
         }
       }
