@@ -25,7 +25,7 @@ function Modal (props) {
     },
     {
       name: 'Rule 4',
-      description: 'You can drag and drop the chips from the bottom bar that works as selector'
+      description: "You can drag and drop the chips from the bottom bar that works as selector, but you can't remove them yet"
     },
     {
       name: 'Rule 5',
@@ -47,7 +47,7 @@ function Modal (props) {
         <div className="modal_close" onClick={() => toggleModal()}>X</div>
         <div className="modal_selector">
           {rules.map((rule, i) => {
-            return <div key={i} className="modal_option" onClick={() =>{changeDescription(i)}}>{rule.name}</div>;
+            return <div key={i} className={pointer === i ? 'modal_option option_selected' : 'modal_option'} onClick={() =>{changeDescription(i)}}>{rule.name}</div>;
           })}
         </div>
         <div className="modal_description">

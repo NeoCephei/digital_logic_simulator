@@ -13,9 +13,9 @@
 }
 .main > .wrapper > img{
   margin: 0 auto;
-  object-fit: fill;
+  object-fit: cover;
   width: 100%;
-  height: 25px;
+  height: 2px;
 }
 .main > .wrapper {
   width: 100%;
