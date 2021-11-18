@@ -1,7 +1,7 @@
 import './App.css';
 import React, {useState} from 'react';
 // eslint-disable-next-line no-unused-vars
-import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 
 import GlobalContext from './services/globalContext'
 
