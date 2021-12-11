@@ -16,7 +16,6 @@ function App() {
     setModal(!modal)
   }
 
-  //Massive object to pass props
   const customProps = {
     modal, toggleModal
   }

@@ -17,8 +17,6 @@ function Navbar (props) {
           <p id="try_me">Try me</p>
         </Link>
         <p id="how_it_works" onClick={() => toggleModal()}>How it works?</p>
-        <p id="register_p" className="not_working" onClick={() => alert("I dont work yet")}>Register</p>
-        <p id="login_p" className="not_working" onClick={() => alert("I dont work yet")}>Login</p>
       </div>
     </div>
   )

@@ -1,5 +1,4 @@
 import React from 'react'
-// import Sketch from './sketch'
 import Sketch from './sketch'
 import useWindowDimensions from '../../hooks/useWindowDimensions';
 
